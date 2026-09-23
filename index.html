@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPECIAL REAGENT MAKER (Customised Version)</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --panel-border: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-hover: #0284c7;
+            --input-bg: #0f172a;
+            --card-bg: #1e293b;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --sidebar-width: 320px;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --panel-bg: #ffffff;
+            --panel-border: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent-color: #0284c7;
+            --accent-hover: #0369a1;
+            --input-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-title h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+        }
+
+        .header-title .author {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-icon {
+            background: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--accent-color);
+        }
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .search-section {
+            margin-bottom: 2rem;
+        }
+
+        .search-bar-wrapper {
+            position: relative;
+        }
+
+        .search-bar-wrapper input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1.1rem;
+            background-color: var(--input-bg);
+            border: 2px solid var(--panel-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-bar-wrapper input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .reagent-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .reagent-card.active {
+            display: flex;
+        }
+
+        .reagent-header {
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 1rem;
+        }
+
+        .reagent-header h2 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .use-tag {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .maker-section {
+            background-color: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .maker-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .volume-input-group {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .input-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .volume-input-group input {
+            width: 120px;
+            padding: 0.6rem 0.8rem;
+            font-size: 1rem;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+
+        .ingredients-list, .procedure-list {
+            margin-left: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .storage-box {
+            background-color: rgba(234, 179, 8, 0.1);
+            border-left: 4px solid #eab308;
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Sidebar Styles (Collapsible) */
+        sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--panel-bg);
+            border-left: 1px solid var(--panel-border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            overflow-y: auto;
+            position: fixed;
+            top: 73px;
+            right: 0;
+            bottom: 40px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 90;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+        }
+
+        sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tools-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .close-sidebar-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+        }
+
+        .close-sidebar-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tool-card {
+            background-color: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .tool-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Calculator UI */
+        .calc-display {
+            width: 100%;
+            height: 40px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-align: right;
+            padding: 0.5rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4rem;
+        }
+
+        .calc-btn {
+            padding: 0.6rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .calc-btn:hover {
+            border-color: var(--accent-color);
+        }
+
+        /* Converter UI */
+        .converter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .converter-group input, .converter-group select {
+            padding: 0.5rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            border-radius: 6px;
+        }
+
+        footer {
+            background-color: var(--panel-bg);
+            border-top: 1px solid var(--panel-border);
+            text-align: center;
+            padding: 0.75rem 1rem;
+            margin-top: auto;
+            position: relative;
+            z-index: 100;
+        }
+
+        footer .disclaimer {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 900px) {
+            sidebar {
+                width: 100%;
+                top: 73px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>SPECIAL REAGENT MAKER (Customised Version)</h1>
+            <div class="author">by Joash Sam</div>
+        </div>
+        <div class="header-controls">
+            <button class="btn-icon" id="sidebarToggle">🧰 Lab Tools</button>
+            <button class="btn-icon" id="themeToggle">🌓 Theme</button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <main>
+            <section class="search-section">
+                <div class="search-bar-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search or select a reagent (e.g., Benedict's, Mayer's, Dragendorff's)..." list="reagentsList">
+                    <datalist id="reagentsList"></datalist>
+                </div>
+            </section>
+
+            <section id="displayArea">
+                <div id="placeholderCard" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                    Select or search for a reagent above to view details and scale preparation volumes.
+                </div>
+                
+                <div id="reagentCard" class="reagent-card">
+                    <div class="reagent-header">
+                        <h2 id="rName">Reagent Name</h2>
+                        <div class="use-tag" id="rUse">Target Use</div>
+                    </div>
+
+                    <div class="maker-section">
+                        <h3>Reagent Preparation Scaler</h3>
+                        <div class="volume-input-group">
+                            <div class="input-item">
+                                <label for="targetVol">Target Batch Volume (mL):</label>
+                                <input type="number" id="targetVol" value="100" min="1" step="1">
+                            </div>
+                            <div class="input-item" id="concGroup" style="display: none;">
+                                <label for="targetConc">Ninhydrin Conc. (% w/v):</label>
+                                <input type="number" id="targetConc" value="0.2" min="0.01" step="0.05">
+                            </div>
+                        </div>
+
+                        <h4 style="margin-bottom: 0.5rem;">Calculated Ingredients Required:</h4>
+                        <ul id="rIngredients" class="ingredients-list"></ul>
+                    </div>
+
+                    <div>
+                        <h3 style="margin-bottom: 0.75rem;">Preparation Procedure:</h3>
+                        <ol id="rProcedure" class="procedure-list"></ol>
+                    </div>
+
+                    <div class="storage-box">
+                        <strong>Storage Requirements:</strong>
+                        <span id="rStorage">Storage information...</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <sidebar id="labSidebar">
+            <div class="sidebar-header">
+                <div class="tools-title">Lab Tools</div>
+                <button class="close-sidebar-btn" id="closeSidebar">✕</button>
+            </div>
+
+            <!-- Basic Calculator -->
+            <div class="tool-card">
+                <h4>Basic Calculator</h4>
+                <input type="text" id="calcDisplay" class="calc-display" readonly>
+                <div class="calc-grid">
+                    <button class="calc-btn" onclick="clearCalc()">C</button>
+                    <button class="calc-btn" onclick="appendCalc('/')">/</button>
+                    <button class="calc-btn" onclick="appendCalc('*')">*</button>
+                    <button class="calc-btn" onclick="backCalc()">⌫</button>
+                    
+                    <button class="calc-btn" onclick="appendCalc('7')">7</button>
+                    <button class="calc-btn" onclick="appendCalc('8')">8</button>
+                    <button class="calc-btn" onclick="appendCalc('9')">9</button>
+                    <button class="calc-btn" onclick="appendCalc('-')">-</button>
+                    
+                    <button class="calc-btn" onclick="appendCalc('4')">4</button>
+                    <button class="calc-btn" onclick="appendCalc('5')">5</button>
+                    <button class="calc-btn" onclick="appendCalc('6')">6</button>
+                    <button class="calc-btn" onclick="appendCalc('+')">+</button>
+                    
+                    <button class="calc-btn" onclick="appendCalc('1')">1</button>
+                    <button class="calc-btn" onclick="appendCalc('2')">2</button>
+                    <button class="calc-btn" onclick="appendCalc('3')">3</button>
+                    <button class="calc-btn" onclick="runCalc()" style="grid-row: span 2; height: 100%;">=</button>
+                    
+                    <button class="calc-btn" onclick="appendCalc('0')" style="grid-column: span 2;">0</button>
+                    <button class="calc-btn" onclick="appendCalc('.')">.</button>
+                </div>
+            </div>
+
+            <!-- Unit Converter -->
+            <div class="tool-card">
+                <h4>Unit Converter</h4>
+                <div class="converter-group">
+                    <label style="font-size:0.8rem;">Category</label>
+                    <select id="convCategory" onchange="updateConvUnits()">
+                        <option value="mass">Mass</option>
+                        <option value="volume">Volume</option>
+                    </select>
+                </div>
+                <div class="converter-group">
+                    <input type="number" id="convVal" placeholder="Value" value="1" oninput="convertUnits()">
+                </div>
+                <div class="converter-group">
+                    <select id="convFrom" onchange="convertUnits()"></select>
+                    <span style="text-align: center; font-size: 0.8rem;">to</span>
+                    <select id="convTo" onchange="convertUnits()"></select>
+                </div>
+                <div style="font-weight: 600; font-size: 0.95rem; color: var(--accent-color);" id="convResult">
+                    1 g = 1000 mg
+                </div>
+            </div>
+        </sidebar>
+    </div>
+
+    <footer>
+        <div class="disclaimer">
+            <b>Disclaimer: For local lab educational use only. For advanced analysis, please refer respective standards</b>[cite: 2]
+        </div>
+    </footer>
+
+    <script>
+        const reagentsData = [
+            {
+                id: "seliwanoff",
+                name: "Seliwanoff's Reagent",
+                use: "Distinction between aldose and ketose sugars (ketoses give a cherry-red color)",
+                baseVolume: 100,
+                ingredients: [
+                    { name: "Resorcinol", amount: 0.05, unit: "g" },
+                    { name: "Concentrated Hydrochloric Acid (HCl)", amount: 33, unit: "mL" },
+                    { name: "Distilled water", amount: 67, unit: "mL", note: "up to batch volume" }
+                ],
+                procedure: [
+                    "Measure {HCl} mL of concentrated HCl into a volumetric flask containing around {water} mL of distilled water.",
+                    "Add {Resorcinol} g of resorcinol and stir until fully dissolved.",
+                    "Bring the total volume to {vol} mL with distilled water."
+                ],
+                storage: "Store in a tightly closed, light-resistant container below 30°C."
+            },
+            {
+                id: "mayers",
+                name: "Mayer's Reagent",
+                use: "Qualitative detection of alkaloids (forms a cream-colored precipitate)",
+                baseVolume: 100,
+                ingredients: [
+                    { name: "Mercuric Chloride (HgCl2)", amount: 1.36, unit: "g" },
+                    { name: "Potassium Iodide (KI)", amount: 5.00, unit: "g" },
+                    { name: "Distilled water", amount: 100, unit: "mL", note: "total solution volume" }
+                ],
+                procedure: [
+                    "Dissolve {Mercuric Chloride (HgCl2)} g of HgCl2 in {water60} mL of distilled water.",
+                    "Dissolve {Potassium Iodide (KI)} g of KI in {water10} mL of distilled water.",
+                    "Combine both solutions slowly while stirring to form the active complex, potassium tetraiodomercurate(II).",
+                    "Dilute with distilled water to a final volume of {vol} mL."
+                ],
+                storage: "Store in a dark, light-protected glass bottle."
+            },
+            {
+                id: "millons",
+                name: "Millon's Reagent",
+                use: "Detection of phenolic amino acids (e.g., tyrosine) and proteins",
+                baseVolume: 60,
+                ingredients: [
+                    { name: "Metallic Mercury", amount: 10, unit: "g" },
+                    { name: "Concentrated Nitric Acid (HNO3)", amount: 10, unit: "mL" },
+                    { name: "Distilled water", amount: 40, unit: "mL" }
+                ],
+                procedure: [
+                    "Under a fume hood, carefully dissolve {Metallic Mercury} g of mercury in {Concentrated Nitric Acid (HNO3)} mL of concentrated HNO3 (generates toxic fumes).",
+                    "Once the metal dissolves, add {Distilled water} mL of distilled water slowly.",
+                    "Filter to remove any undissolved mercury or particulate residue."
+                ],
+                storage: "Store in a heavy glass bottle in a ventilated chemical storage area."
+            },
+            {
+                id: "molisch",
+                name: "Molisch's Reagent",
+                use: "General qualitative detection for carbohydrates (forms a purple ring at the junction)",
+                baseVolume: 25,
+                ingredients: [
+                    { name: "alpha-Naphthol", amount: 1.25, unit: "g" },
+                    { name: "Ethanol (95%)", amount: 25, unit: "mL" }
+                ],
+                procedure: [
+                    "Weigh {alpha-Naphthol} g of alpha-naphthol.",
+                    "Dissolve completely in {Ethanol (95%)} mL of 95% ethanol with gentle stirring."
+                ],
+                storage: "Store in an amber glass bottle protected from heat and open flame."
+            },
+            {
+                id: "barfoeds",
+                name: "Barfoed's Reagent",
+                use: "Differentiating monosaccharides from disaccharides",
+                baseVolume: 200,
+                ingredients: [
+                    { name: "Copper(II) Acetate Monohydrate", amount: 13.3, unit: "g" },
+                    { name: "Glacial Acetic Acid", amount: 1.8, unit: "mL" },
+                    { name: "Distilled water", amount: 200, unit: "mL", note: "up to final volume" }
+                ],
+                procedure: [
+                    "Dissolve {Copper(II) Acetate Monohydrate} g of copper acetate monohydrate in {vol} mL of distilled water.",
+                    "Add {Glacial Acetic Acid} mL of glacial acetic acid to the solution and stir thoroughly.",
+                    "Filter if any undissolved precipitate remains."
+                ],
+                storage: "Store in a standard reagent bottle at room temperature."
+            },
+            {
+                id: "esbachs",
+                name: "Esbach's Reagent",
+                use: "Detection and quantitative estimation of albumin in protein samples",
+                baseVolume: 1000,
+                ingredients: [
+                    { name: "Picric Acid", amount: 10, unit: "g" },
+                    { name: "Citric Acid", amount: 20, unit: "g" },
+                    { name: "Distilled water", amount: 1000, unit: "mL", note: "up to total volume" }
+                ],
+                procedure: [
+                    "Dissolve {Picric Acid} g of picric acid and {Citric Acid} g of citric acid in approximately {water800} mL of distilled water.",
+                    "Mix until completely clear and bring the final volume to {vol} mL with distilled water."
+                ],
+                storage: "Store in a glass container at room temperature away from ignition sources."
+            },
+            {
+                id: "fouchets",
+                name: "Fouchet's Reagent (25%)",
+                use: "Detection of bilirubin in biological samples (yields a green complex)",
+                baseVolume: 100,
+                ingredients: [
+                    { name: "Trichloroacetic Acid (TCA)", amount: 25, unit: "g" },
+                    { name: "Ferric Chloride (10% w/v aqueous solution)", amount: 10, unit: "mL" },
+                    { name: "Distilled water", amount: 100, unit: "mL", note: "up to total volume" }
+                ],
+                procedure: [
+                    "Dissolve {Trichloroacetic Acid (TCA)} g of TCA in {water50} mL of distilled water.",
+                    "Add {Ferric Chloride (10% w/v aqueous solution)} mL of 10% aqueous ferric chloride solution.",
+                    "Bring the total final volume to {vol} mL using distilled water and mix thoroughly."
+                ],
+                storage: "Store in an amber glass bottle."
+            },
+            {
+                id: "benedicts",
+                name: "Benedict's Reagent",
+                use: "Qualitative detection of reducing sugars (forms a red, orange, or green cuprous oxide precipitate)",
+                baseVolume: 1000,
+                ingredients: [
+                    { name: "Sodium Citrate", amount: 173, unit: "g" },
+                    { name: "Anhydrous Sodium Carbonate (Na2CO3)", amount: 100, unit: "g" },
+                    { name: "Copper(II) Sulfate Pentahydrate (CuSO4.5H2O)", amount: 17.3, unit: "g" },
+                    { name: "Distilled water", amount: 1000, unit: "mL", note: "up to total volume" }
+                ],
+                procedure: [
+                    "Dissolve {Sodium Citrate} g of sodium citrate and {Anhydrous Sodium Carbonate (Na2CO3)} g of anhydrous sodium carbonate in about {water800} mL of distilled water using gentle heat. Filter if necessary.",
+                    "Separately, dissolve {Copper(II) Sulfate Pentahydrate (CuSO4.5H2O)} g of copper sulfate pentahydrate in {water100} mL of distilled water.",
+                    "Slowly pour the copper sulfate solution into the citrate-carbonate solution with continuous stirring.",
+                    "Dilute the final solution to {vol} mL with distilled water."
+                ],
+                storage: "Store in a clear or amber bottle at room temperature (stable for long periods)."
+            },
+            {
+                id: "tollens",
+                name: "Tollens' Reagent (Ammoniacal Silver Nitrate)",
+                use: "Detection of aldehydes and reducing sugars (yields a silver mirror effect)",
+                baseVolume: 20,
+                ingredients: [
+                    { name: "Silver Nitrate (AgNO3)", amount: 1.0, unit: "g" },
+                    { name: "Sodium Hydroxide (10% w/v solution)", amount: 1.0, unit: "mL" },
+                    { name: "Concentrated Ammonia (NH3) solution", amount: 1.0, unit: "mL", note: "added dropwise" },
+                    { name: "Distilled water", amount: 20, unit: "mL", note: "up to final volume" }
+                ],
+                procedure: [
+                    "Dissolve {Silver Nitrate (AgNO3)} g of AgNO3 in {water10} mL of distilled water.",
+                    "Add {Sodium Hydroxide (10% w/v solution)} mL of 10% NaOH solution to form a dark brown silver oxide precipitate.",
+                    "Add concentrated ammonia dropwise with constant swirling just until the brown precipitate completely redissolves.",
+                    "Dilute to {vol} mL with distilled water."
+                ],
+                storage: "MUST BE PREPARED FRESH BEFORE USE. Do not store Tollen's reagent after testing due to explosive silver nitride formation."
+            },
+            {
+                id: "dragendorffs",
+                name: "Dragendorff's Reagent",
+                use: "Detection of alkaloids (yields an orange/reddish-brown precipitate)",
+                baseVolume: 100,
+                ingredients: [
+                    { name: "Part A: Bismuth Subnitrate", amount: 0.85, unit: "g" },
+                    { name: "Part A: Glacial Acetic Acid", amount: 10, unit: "mL" },
+                    { name: "Part A: Distilled water", amount: 40, unit: "mL" },
+                    { name: "Part B: Potassium Iodide (KI)", amount: 8.0, unit: "g" },
+                    { name: "Part B: Distilled water", amount: 20, unit: "mL" }
+                ],
+                procedure: [
+                    "Part A: Dissolve {Part A: Bismuth Subnitrate} g of bismuth subnitrate in {Part A: Glacial Acetic Acid} mL glacial acetic acid and {Part A: Distilled water} mL water.",
+                    "Part B: Dissolve {Part B: Potassium Iodide (KI)} g of KI in {Part B: Distilled water} mL water.",
+                    "Working Solution: Combine equal parts of Stock A and Stock B (e.g. {water5} mL A + {water5} mL B), add {water20} mL glacial acetic acid, and dilute with distilled water to bring final batch volume to {vol} mL."
+                ],
+                storage: "Store stock solutions (A & B) in dark bottles. Keep working solution protected from light."
+            },
+            {
+                id: "fehlings",
+                name: "Fehling's Reagent (A & B)",
+                use: "Differentiation of aldehydes and reducing sugars",
+                baseVolume: 1000,
+                ingredients: [
+                    { name: "Fehling's A: Copper(II) Sulfate Pentahydrate", amount: 34.66, unit: "g" },
+                    { name: "Fehling's A: Distilled water", amount: 500, unit: "mL" },
+                    { name: "Fehling's B: Potassium Sodium Tartrate", amount: 173, unit: "g" },
+                    { name: "Fehling's B: Sodium Hydroxide (NaOH)", amount: 50, unit: "g" },
+                    { name: "Fehling's B: Distilled water", amount: 500, unit: "mL" }
+                ],
+                procedure: [
+                    "Prepare Solution A: Dissolve {Fehling's A: Copper(II) Sulfate Pentahydrate} g in water and dilute to {water500} mL.",
+                    "Prepare Solution B: Dissolve {Fehling's B: Potassium Sodium Tartrate} g Rochelle salt and {Fehling's B: Sodium Hydroxide (NaOH)} g NaOH in water, dilute to {water500} mL.",
+                    "Mix equal volumes (1:1) of Fehling's A and Fehling's B immediately prior to performing the test."
+                ],
+                storage: "Store Fehling's A and B in separate bottles. Do not store pre-mixed solution."
+            },
+            {
+                id: "wagners",
+                name: "Wagner's Reagent",
+                use: "Qualitative detection of alkaloids (yields a reddish-brown precipitate)",
+                baseVolume: 100,
+                ingredients: [
+                    { name: "Iodine (I2)", amount: 1.27, unit: "g" },
+                    { name: "Potassium Iodide (KI)", amount: 2.00, unit: "g" },
+                    { name: "Distilled water", amount: 100, unit: "mL", note: "up to total volume" }
+                ],
+                procedure: [
+                    "Dissolve {Potassium Iodide (KI)} g of KI in {water10} mL of distilled water.",
+                    "Add {Iodine (I2)} g of iodine crystals and stir until completely dissolved.",
+                    "Dilute with distilled water to make {vol} mL."
+                ],
+                storage: "Store in an amber glass bottle protected from light exposure."
+            },
+            {
+                id: "hagers",
+                name: "Hager's Reagent",
+                use: "Detection of alkaloids (yields a yellow crystalline precipitate)",
+                baseVolume: 100,
+                ingredients: [
+                    { name: "Picric Acid", amount: 1.00, unit: "g" },
+                    { name: "Distilled water", amount: 100, unit: "mL" }
+                ],
+                procedure: [
+                    "Add {Picric Acid} g of picric acid to {Distilled water} mL of boiling distilled water.",
+                    "Stir until completely dissolved, allow to cool to room temperature, and filter off any undissolved residue."
+                ],
+                storage: "Store the saturated aqueous solution in a sealed glass bottle."
+            },
+            {
+                id: "ninhydrin",
+                name: "Ninhydrin Reagent",
+                use: "Identification of primary amino acids and proteins (yields a Ruhemann's purple complex)",
+                baseVolume: 100,
+                ingredients: [
+                    { name: "Ninhydrin (Indane-1,2,3-trione hydrate)", amount: 0.20, unit: "g" },
+                    { name: "Ethanol (95%) or Acetone", amount: 100, unit: "mL" }
+                ],
+                procedure: [
+                    "Weigh {Ninhydrin (Indane-1,2,3-trione hydrate)} g of ninhydrin powder to prepare a {conc}% (w/v) solution.",
+                    "Dissolve the weighed ninhydrin completely in {Ethanol (95%) or Acetone} mL of 95% ethanol or acetone.",
+                    "Stir gently until clear and store in an amber glass bottle."
+                ],
+                storage: "Store in an amber bottle at low temperatures (2–8°C)."
+            }
+        ];
+
+        let selectedReagent = null;
+
+        // Collapsible Sidebar Handlers
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const labSidebar = document.getElementById('labSidebar');
+
+        sidebarToggle.addEventListener('click', () => {
+            labSidebar.classList.toggle('open');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            labSidebar.classList.remove('open');
+        });
+
+        // Close sidebar if user clicks outside of it on smaller screens / main area
+        document.querySelector('main').addEventListener('click', () => {
+            if (labSidebar.classList.contains('open')) {
+                labSidebar.classList.remove('open');
+            }
+        });
+
+        // Populate search options
+        const searchInput = document.getElementById('searchInput');
+        const datalist = document.getElementById('reagentsList');
+
+        reagentsData.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.name;
+            datalist.appendChild(opt);
+        });
+
+        // Improved Search Input Listener
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase().trim();
+            if (!val) return;
+            
+            const exactMatch = reagentsData.find(r => r.name.toLowerCase() === val);
+            const prefixMatch = reagentsData.find(r => r.name.toLowerCase().startsWith(val));
+            const found = exactMatch || prefixMatch;
+
+            if (found && (val.length > 3 || exactMatch)) {
+                renderReagent(found);
+            }
+        });
+
+        document.getElementById('targetVol').addEventListener('input', () => {
+            if (selectedReagent) {
+                renderReagent(selectedReagent);
+            }
+        });
+
+        document.getElementById('targetConc').addEventListener('input', () => {
+            if (selectedReagent && selectedReagent.id === 'ninhydrin') {
+                renderReagent(selectedReagent);
+            }
+        });
+
+        function renderReagent(reagent) {
+            selectedReagent = reagent;
+            document.getElementById('placeholderCard').style.display = 'none';
+            const card = document.getElementById('reagentCard');
+            card.classList.add('active');
+
+            const concGroup = document.getElementById('concGroup');
+            if (reagent.id === 'ninhydrin') {
+                concGroup.style.display = 'flex';
+                const currentConc = parseFloat(document.getElementById('targetConc').value) || 0.2;
+                document.getElementById('rName').innerText = `Ninhydrin Reagent (${currentConc}%)`;
+            } else {
+                concGroup.style.display = 'none';
+                document.getElementById('rName').innerText = reagent.name;
+            }
+
+            document.getElementById('rUse').innerText = reagent.use;
+            document.getElementById('rStorage').innerText = reagent.storage;
+
+            const targetVol = parseFloat(document.getElementById('targetVol').value) || reagent.baseVolume;
+            const factor = targetVol / reagent.baseVolume;
+
+            // Render Ingredients
+            const ingList = document.getElementById('rIngredients');
+            ingList.innerHTML = '';
+            
+            const scaledIngs = {};
+
+            reagent.ingredients.forEach(ing => {
+                let scaledAmount;
+                if (reagent.id === 'ninhydrin' && ing.name.includes("Ninhydrin")) {
+                    const conc = parseFloat(document.getElementById('targetConc').value) || 0.2;
+                    scaledAmount = ((conc / 100) * targetVol).toFixed(3).replace(/\.?0+$/, '');
+                } else {
+                    scaledAmount = (ing.amount * factor).toFixed(3).replace(/\.?0+$/, '');
+                }
+
+                scaledIngs[ing.name] = scaledAmount;
+
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${ing.name}:</strong> ${scaledAmount} ${ing.unit} ${ing.note ? `<em>(${ing.note})</em>` : ''}`;
+                ingList.appendChild(li);
+            });
+
+            // Render Procedure
+            const procList = document.getElementById('rProcedure');
+            procList.innerHTML = '';
+
+            reagent.procedure.forEach(step => {
+                let formattedStep = step.replaceAll('{vol}', targetVol);
+                
+                if (reagent.id === 'ninhydrin') {
+                    const conc = parseFloat(document.getElementById('targetConc').value) || 0.2;
+                    formattedStep = formattedStep.replaceAll('{conc}', conc);
+                }
+
+                // Dynamic variable replacements for water & acid buffers using replaceAll
+                formattedStep = formattedStep.replaceAll('{water}', (50 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water5}', (5 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water10}', (10 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water20}', (20 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water50}', (50 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water60}', (60 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water100}', (100 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water500}', (500 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water800}', (800 * factor).toFixed(1).replace(/\.0$/, ''));
+
+                Object.keys(scaledIngs).forEach(key => {
+                    formattedStep = formattedStep.replaceAll(`{${key}}`, scaledIngs[key]);
+                });
+
+                const li = document.createElement('li');
+                li.innerText = formattedStep;
+                procList.appendChild(li);
+            });
+        }
+
+        // Theme Toggle
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+        });
+
+        // Basic Calculator (Safe Evaluation)
+        const calcDisplay = document.getElementById('calcDisplay');
+        function appendCalc(val) {
+            calcDisplay.value += val;
+        }
+        function clearCalc() {
+            calcDisplay.value = '';
+        }
+        function backCalc() {
+            calcDisplay.value = calcDisplay.value.slice(0, -1);
+        }
+        function runCalc() {
+            try {
+                const sanitized = calcDisplay.value.replace(/[^0-9+\-*/.]/g, '');
+                if (!sanitized) return;
+                const result = Function(`'use strict'; return (${sanitized})`)();
+                if (!isFinite(result)) {
+                    calcDisplay.value = 'Error';
+                } else {
+                    calcDisplay.value = Number.isInteger(result) ? result : parseFloat(result.toFixed(4));
+                }
+            } catch (e) {
+                calcDisplay.value = 'Error';
+            }
+        }
+
+        // Unit Converter Logic
+        const convUnits = {
+            mass: {
+                g: 1,
+                mg: 0.001,
+                kg: 1000,
+                oz: 28.3495
+            },
+            volume: {
+                mL: 1,
+                L: 1000,
+                uL: 0.001,
+                floz: 29.5735
+            }
+        };
+
+        function updateConvUnits() {
+            const cat = document.getElementById('convCategory').value;
+            const fromSelect = document.getElementById('convFrom');
+            const toSelect = document.getElementById('convTo');
+
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+
+            Object.keys(convUnits[cat]).forEach(unit => {
+                fromSelect.appendChild(new Option(unit, unit));
+                toSelect.appendChild(new Option(unit, unit));
+            });
+
+            if (cat === 'mass') {
+                fromSelect.value = 'g';
+                toSelect.value = 'mg';
+            } else {
+                fromSelect.value = 'mL';
+                toSelect.value = 'L';
+            }
+            convertUnits();
+        }
+
+        function convertUnits() {
+            const cat = document.getElementById('convCategory').value;
+            const val = parseFloat(document.getElementById('convVal').value) || 0;
+            const from = document.getElementById('convFrom').value;
+            const to = document.getElementById('convTo').value;
+
+            const baseVal = val * convUnits[cat][from];
+            const result = baseVal / convUnits[cat][to];
+
+            document.getElementById('convResult').innerText = `${val} ${from} = ${result.toLocaleString(undefined, {maximumFractionDigits: 4})} ${to}`;
+        }
+
+        // Initialize Converter
+        updateConvUnits();
+    </script>
+</body>
+</html>
