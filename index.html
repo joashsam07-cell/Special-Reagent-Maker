@@ -685,9 +685,23 @@
 
         let reagentsData = [];
         let selectedReagent = null;
+        let isFetching = false;
+
+        // Load cached local data immediately upon script execution
+        function loadLocalCache() {
+            const localData = localStorage.getItem('cachedReagentsData');
+            if (localData) {
+                try {
+                    reagentsData = JSON.parse(localData);
+                } catch (e) {
+                    console.error("Failed to parse cached data:", e);
+                }
+            }
+        }
 
         // Fetch Reagent Data directly from API / Local Cache
         async function fetchReagentData() {
+            isFetching = true;
             try {
                 const response = await fetch(GOOGLE_SHEETS_API_URL);
                 if (!response.ok) throw new Error("Google Sheets API request failed");
@@ -697,12 +711,19 @@
                 console.log("Reagent database successfully synchronized with Google Sheets.");
             } catch (error) {
                 console.warn("Offline or network fetch failed. Checking local storage cache...", error);
-                const localData = localStorage.getItem('cachedReagentsData');
-                if (localData) {
-                    reagentsData = JSON.parse(localData);
-                } else {
+                if (!reagentsData || reagentsData.length === 0) {
+                    loadLocalCache();
+                }
+                if (!reagentsData || reagentsData.length === 0) {
                     document.getElementById('placeholderCard').innerText = 
                         "Offline mode: No cached reagent database found. Please connect to the internet once to sync database.";
+                }
+            } finally {
+                isFetching = false;
+                // If user typed something while fetch was running, refresh suggestions immediately
+                const currentQuery = searchInput.value;
+                if (currentQuery) {
+                    updateSuggestions(currentQuery);
                 }
             }
         }
@@ -735,6 +756,16 @@
 
             if (!val) {
                 suggestionsBox.classList.remove('active');
+                return;
+            }
+
+            if ((!reagentsData || reagentsData.length === 0) && isFetching) {
+                const loadingItem = document.createElement('div');
+                loadingItem.className = 'suggestion-item';
+                loadingItem.style.color = 'var(--text-secondary)';
+                loadingItem.innerText = 'Loading database...';
+                suggestionsBox.appendChild(loadingItem);
+                suggestionsBox.classList.add('active');
                 return;
             }
 
@@ -999,6 +1030,9 @@
 
             document.getElementById('convResult').innerText = `${val} ${from} = ${result.toLocaleString(undefined, {maximumFractionDigits: 4})} ${to}`;
         }
+
+        // Pre-load local cache immediately for synchronous typing capability
+        loadLocalCache();
 
         // Initialize App on DOM Load
         window.addEventListener('DOMContentLoaded', () => {
