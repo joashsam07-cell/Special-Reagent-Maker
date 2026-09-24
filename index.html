@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPECIAL REAGENT MAKER (Customised Version)</title>
+    
+    <!-- PWA Manifest & Theme Color -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ReagentMaker">
+
     <style>
         :root {
             --bg-color: #0f172a;
@@ -97,6 +105,18 @@
 
         .btn-icon:hover {
             border-color: var(--accent-color);
+        }
+
+        #installBtn {
+            background-color: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            display: none;
+        }
+
+        #installBtn:hover {
+            background-color: var(--accent-hover);
+            color: #ffffff;
         }
 
         .app-container {
@@ -226,7 +246,6 @@
             font-size: 0.95rem;
         }
 
-        /* Sidebar Styles (Collapsible) */
         sidebar {
             width: var(--sidebar-width);
             background-color: var(--panel-bg);
@@ -289,7 +308,6 @@
             margin-bottom: 0.75rem;
         }
 
-        /* Calculator UI */
         .calc-display {
             width: 100%;
             height: 40px;
@@ -323,7 +341,6 @@
             border-color: var(--accent-color);
         }
 
-        /* Converter UI */
         .converter-group {
             display: flex;
             flex-direction: column;
@@ -370,6 +387,7 @@
             <div class="author">by Joash Sam</div>
         </div>
         <div class="header-controls">
+            <button class="btn-icon" id="installBtn">📲 Install App</button>
             <button class="btn-icon" id="sidebarToggle">🧰 Lab Tools</button>
             <button class="btn-icon" id="themeToggle">🌓 Theme</button>
         </div>
@@ -488,7 +506,7 @@
 
     <footer>
         <div class="disclaimer">
-            <b>Disclaimer: For local lab educational use only. For advanced analysis, please refer respective standards</b>[cite: 2]
+            <b>Disclaimer: For local lab educational use only. For advanced analysis, please refer respective standards</b>
         </div>
     </footer>
 
@@ -752,7 +770,6 @@
             labSidebar.classList.remove('open');
         });
 
-        // Close sidebar if user clicks outside of it on smaller screens / main area
         document.querySelector('main').addEventListener('click', () => {
             if (labSidebar.classList.contains('open')) {
                 labSidebar.classList.remove('open');
@@ -851,7 +868,6 @@
                     formattedStep = formattedStep.replaceAll('{conc}', conc);
                 }
 
-                // Dynamic variable replacements for water & acid buffers using replaceAll
                 formattedStep = formattedStep.replaceAll('{water}', (50 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water5}', (5 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water10}', (10 * factor).toFixed(1).replace(/\.0$/, ''))
@@ -880,7 +896,7 @@
             document.documentElement.setAttribute('data-theme', nextTheme);
         });
 
-        // Basic Calculator (Safe Evaluation)
+        // Basic Calculator
         const calcDisplay = document.getElementById('calcDisplay');
         function appendCalc(val) {
             calcDisplay.value += val;
@@ -906,20 +922,10 @@
             }
         }
 
-        // Unit Converter Logic
+        // Unit Converter
         const convUnits = {
-            mass: {
-                g: 1,
-                mg: 0.001,
-                kg: 1000,
-                oz: 28.3495
-            },
-            volume: {
-                mL: 1,
-                L: 1000,
-                uL: 0.001,
-                floz: 29.5735
-            }
+            mass: { g: 1, mg: 0.001, kg: 1000, oz: 28.3495 },
+            volume: { mL: 1, L: 1000, uL: 0.001, floz: 29.5735 }
         };
 
         function updateConvUnits() {
@@ -957,8 +963,34 @@
             document.getElementById('convResult').innerText = `${val} ${from} = ${result.toLocaleString(undefined, {maximumFractionDigits: 4})} ${to}`;
         }
 
-        // Initialize Converter
         updateConvUnits();
+
+        // PWA Installation & Service Worker Logic
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'flex';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
     </script>
 </body>
 </html>
