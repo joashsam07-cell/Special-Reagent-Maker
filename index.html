@@ -176,6 +176,11 @@
             margin-bottom: 2rem;
         }
 
+        .search-bar-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
         .search-bar-wrapper input {
             width: 100%;
             padding: 1rem 1.25rem;
@@ -189,6 +194,43 @@
 
         .search-bar-wrapper input:focus {
             border-color: var(--accent-color);
+        }
+
+        /* Attached Dropdown Suggestions Box */
+        .suggestions-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            max-height: 260px;
+            overflow-y: auto;
+            z-index: 50;
+            display: none;
+            box-shadow: var(--shadow);
+        }
+
+        .suggestions-dropdown.active {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 0.85rem 1.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background-color: var(--input-bg);
+            color: var(--accent-color);
         }
 
         .reagent-card {
@@ -501,8 +543,8 @@
         <main>
             <section class="search-section">
                 <div class="search-bar-wrapper">
-                    <input type="text" id="searchInput" placeholder="Search any reagent (e.g., Benedict's, Mayer's, Dragendorff's)..." list="reagentsList">
-                    <datalist id="reagentsList"></datalist>
+                    <input type="text" id="searchInput" placeholder="Search any reagent (e.g., Benedict's, Mayer's, Dragendorff's)..." autocomplete="off">
+                    <div id="suggestionsBox" class="suggestions-dropdown"></div>
                 </div>
             </section>
 
@@ -662,10 +704,6 @@
                     document.getElementById('placeholderCard').innerText = 
                         "Offline mode: No cached reagent database found. Please connect to the internet once to sync database.";
                 }
-            } finally {
-                if (reagentsData.length > 0) {
-                    populateDatalist();
-                }
             }
         }
 
@@ -687,16 +725,58 @@
         });
         window.addEventListener('offline', updateNetworkStatus);
 
-        // Populate search options
-        function populateDatalist() {
-            const datalist = document.getElementById('reagentsList');
-            datalist.innerHTML = '';
-            reagentsData.forEach(r => {
-                const opt = document.createElement('option');
-                opt.value = r.name;
-                datalist.appendChild(opt);
+        // Custom Attached Dropdown Suggestions Handler
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestionsBox');
+
+        function updateSuggestions(query) {
+            const val = query.toLowerCase().trim();
+            suggestionsBox.innerHTML = '';
+
+            if (!val) {
+                suggestionsBox.classList.remove('active');
+                return;
+            }
+
+            const matches = reagentsData.filter(r => r.name.toLowerCase().includes(val));
+
+            if (matches.length === 0) {
+                suggestionsBox.classList.remove('active');
+                return;
+            }
+
+            matches.forEach(reagent => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerText = reagent.name;
+                
+                item.addEventListener('click', () => {
+                    searchInput.value = reagent.name;
+                    renderReagent(reagent);
+                    suggestionsBox.classList.remove('active');
+                });
+
+                suggestionsBox.appendChild(item);
             });
+
+            suggestionsBox.classList.add('active');
         }
+
+        searchInput.addEventListener('input', (e) => {
+            updateSuggestions(e.target.value);
+        });
+
+        searchInput.addEventListener('focus', (e) => {
+            if (e.target.value) {
+                updateSuggestions(e.target.value);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-bar-wrapper')) {
+                suggestionsBox.classList.remove('active');
+            }
+        });
 
         // Collapsible Sidebar Handlers
         const sidebarToggle = document.getElementById('sidebarToggle');
@@ -730,21 +810,6 @@
             } else {
                 performTestContent.classList.add('open');
                 testToggleIcon.innerText = '▲';
-            }
-        });
-
-        // Search Input Listener
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase().trim();
-            if (!val) return;
-            
-            const exactMatch = reagentsData.find(r => r.name.toLowerCase() === val);
-            const prefixMatch = reagentsData.find(r => r.name.toLowerCase().startsWith(val));
-            const found = exactMatch || prefixMatch;
-
-            if (found && (val.length > 3 || exactMatch)) {
-                renderReagent(found);
             }
         });
 
