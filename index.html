@@ -2,20 +2,19 @@
 <html lang="en" data-theme="dark">
 <head>
     <!-- Search Engine Optimization (SEO) Meta Tags -->
-<meta name="author" content="Joash Sam">
-<meta name="description" content="SPECIAL REAGENT MAKER by Joash Sam — A web utility for dynamic laboratory reagent preparation, recipe scaling, and chemical analysis calculations for pharmaceutical and qualitative chemistry labs.">
-<meta name="keywords" content="Joash Sam, SPECIAL REAGENT MAKER, Reagent Maker, Laboratory Reagent Preparation, Qualitative Analysis Reagents, Pharmacognosy Reagents, Chemical Recipe Scaler, Seliwanoff's Reagent, Seliwanoff Reagent, Mayer's Reagent, Mayer Reagent, Millon's Reagent, Millon Reagent, Molisch's Reagent, Molisch Reagent, Barfoed's Reagent, Barfoed Reagent, Esbach's Reagent, Esbach Reagent, Fouchet's Reagent, Fouchet Reagent, Benedict's Reagent, Benedict Reagent, Tollens' Reagent, Tollens Reagent, Ammoniacal Silver Nitrate, Dragendorff's Reagent, Dragendorff Reagent, Fehling's Reagent, Fehling's A and B, Wagner's Reagent, Wagner Reagent, Hager's Reagent, Hager Reagent, Ninhydrin Reagent, Potassium Tetraiodomercurate, Alkaloid Detection Reagents, Carbohydrate Test Reagents, Protein Detection Reagents, Analytical Chemistry Scaler">
-<meta name="robots" content="index, follow">
+    <meta name="author" content="Joash Sam">
+    <meta name="description" content="SPECIAL REAGENT MAKER by Joash Sam — A web utility for dynamic laboratory reagent preparation, recipe scaling, and chemical analysis calculations for pharmaceutical and qualitative chemistry labs.">
+    <meta name="keywords" content="Joash Sam, SPECIAL REAGENT MAKER, Reagent Maker, Laboratory Reagent Preparation, Qualitative Analysis Reagents, Pharmacognosy Reagents, Chemical Recipe Scaler, Seliwanoff's Reagent, Seliwanoff Reagent, Mayer's Reagent, Mayer Reagent, Millon's Reagent, Millon Reagent, Molisch's Reagent, Molisch Reagent, Barfoed's Reagent, Barfoed Reagent, Esbach's Reagent, Esbach Reagent, Fouchet's Reagent, Fouchet Reagent, Benedict's Reagent, Benedict Reagent, Tollens' Reagent, Tollens Reagent, Ammoniacal Silver Nitrate, Dragendorff's Reagent, Dragendorff Reagent, Fehling's Reagent, Fehling's A and B, Wagner's Reagent, Wagner Reagent, Hager's Reagent, Hager Reagent, Ninhydrin Reagent, Potassium Tetraiodomercurate, Alkaloid Detection Reagents, Carbohydrate Test Reagents, Protein Detection Reagents, Analytical Chemistry Scaler">
+    <meta name="robots" content="index, follow">
     
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HEY9BBTEC8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-HEY9BBTEC8');
-</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HEY9BBTEC8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HEY9BBTEC8');
+    </script>
     <meta name="google-site-verification" content="P6Mdk1RGkNOp1FRiAvc_6n_WMnMY3mo2BvgtLaBA4hQ" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -155,10 +154,6 @@
             margin-bottom: 2rem;
         }
 
-        .search-bar-wrapper {
-            position: relative;
-        }
-
         .search-bar-wrapper input {
             width: 100%;
             padding: 1rem 1.25rem;
@@ -258,6 +253,74 @@
             background-color: rgba(234, 179, 8, 0.1);
             border-left: 4px solid #eab308;
             padding: 1rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Perform Test Accordion Styles */
+        .perform-test-wrapper {
+            background-color: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .perform-test-btn {
+            width: 100%;
+            background-color: rgba(56, 189, 248, 0.08);
+            color: var(--accent-color);
+            border: none;
+            padding: 1rem 1.25rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .perform-test-btn:hover {
+            background-color: rgba(56, 189, 248, 0.15);
+        }
+
+        .perform-test-content {
+            display: none;
+            padding: 1.5rem;
+            border-top: 1px solid var(--panel-border);
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .perform-test-content.open {
+            display: flex;
+        }
+
+        .test-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .test-block h4 {
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-block ul, .test-block ol {
+            margin-left: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .inference-card {
+            background-color: var(--panel-bg);
+            border-left: 4px solid #22c55e;
+            padding: 0.75rem 1rem;
             border-radius: 4px;
             font-size: 0.95rem;
         }
@@ -399,7 +462,7 @@
 
     <header>
         <div class="header-title">
-            <h1>SPECIAL REAGENT MAKER </h1>
+            <h1>SPECIAL REAGENT MAKER</h1>
             <div class="author">by Joash Sam</div>
         </div>
         <div class="header-controls">
@@ -455,6 +518,29 @@
                         <strong>Storage Requirements:</strong>
                         <span id="rStorage">Storage information...</span>
                     </div>
+
+                    <!-- NEW: Perform Test Section -->
+                    <div class="perform-test-wrapper">
+                        <button class="perform-test-btn" id="performTestToggle">
+                            <span>🔬 Perform Test Section (Protocol & Inferences)</span>
+                            <span id="testToggleIcon">▼</span>
+                        </button>
+                        <div class="perform-test-content" id="performTestContent">
+                            <div class="test-block">
+                                <h4>Test Procedure</h4>
+                                <ol id="tProcedure"></ol>
+                            </div>
+                            <div class="test-block">
+                                <h4>Expected Results & Observation</h4>
+                                <ul id="tResults"></ul>
+                            </div>
+                            <div class="inference-card">
+                                <strong>Inference / Conclusion:</strong>
+                                <span id="tInference">Inference details...</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
         </main>
@@ -543,7 +629,19 @@
                     "Add {Resorcinol} g of resorcinol and stir until fully dissolved.",
                     "Bring the total volume to {vol} mL with distilled water."
                 ],
-                storage: "Store in a tightly closed, light-resistant container below 30°C."
+                storage: "Store in a tightly closed, light-resistant container below 30°C.",
+                testProtocol: {
+                    steps: [
+                        "Take 2 mL of Seliwanoff's reagent in a clean, dry test tube.",
+                        "Add 0.5 mL (or 2–3 drops) of the test carbohydrate solution.",
+                        "Heat the test tube in a boiling water bath for 1 to 2 minutes."
+                    ],
+                    results: [
+                        "Positive Result: Rapid development of a cherry-red or fiery red solution.",
+                        "Negative Result: Light pink or no color change within 2 minutes (aldoses react much slower)."
+                    ],
+                    inference: "Cherry-red color confirms the presence of a Ketose sugar (e.g., Fructose, Sucrose)."
+                }
             },
             {
                 id: "mayers",
@@ -561,7 +659,18 @@
                     "Combine both solutions slowly while stirring to form the active complex, potassium tetraiodomercurate(II).",
                     "Dilute with distilled water to a final volume of {vol} mL."
                 ],
-                storage: "Store in a dark, light-protected glass bottle."
+                storage: "Store in a dark, light-protected glass bottle.",
+                testProtocol: {
+                    steps: [
+                        "Take 1–2 mL of the acidic extract of the test sample (dissolved in dilute HCl or H2SO4) in a test tube.",
+                        "Add 2 to 3 drops of Mayer's reagent along the sides of the test tube."
+                    ],
+                    results: [
+                        "Positive Result: Formation of a cream-colored or pale yellow precipitate/turbidity.",
+                        "Negative Result: Solution remains clear with no precipitate."
+                    ],
+                    inference: "Presence of a cream precipitate indicates the positive presence of Alkaloids."
+                }
             },
             {
                 id: "millons",
@@ -578,7 +687,19 @@
                     "Once the metal dissolves, add {Distilled water} mL of distilled water slowly.",
                     "Filter to remove any undissolved mercury or particulate residue."
                 ],
-                storage: "Store in a heavy glass bottle in a ventilated chemical storage area."
+                storage: "Store in a heavy glass bottle in a ventilated chemical storage area.",
+                testProtocol: {
+                    steps: [
+                        "Take 2 mL of protein sample solution in a test tube.",
+                        "Add 5 to 6 drops of Millon's reagent and mix well (a white precipitate initially forms).",
+                        "Gently heat the mixture over a Bunsen flame or in a boiling water bath for 2 minutes."
+                    ],
+                    results: [
+                        "Positive Result: The white precipitate turns brick-red, or the solution turns red upon heating.",
+                        "Negative Result: Precipitate remains white or no color change."
+                    ],
+                    inference: "Brick-red precipitate confirms Phenolic group-containing amino acids (e.g., Tyrosine) and Proteins."
+                }
             },
             {
                 id: "molisch",
@@ -593,7 +714,19 @@
                     "Weigh {alpha-Naphthol} g of alpha-naphthol.",
                     "Dissolve completely in {Ethanol (95%)} mL of 95% ethanol with gentle stirring."
                 ],
-                storage: "Store in an amber glass bottle protected from heat and open flame."
+                storage: "Store in an amber glass bottle protected from heat and open flame.",
+                testProtocol: {
+                    steps: [
+                        "Take 2 mL of the test solution in a clean test tube.",
+                        "Add 2 drops of Molisch's reagent and mix thoroughly.",
+                        "Incline the test tube and carefully pour 1 to 2 mL of concentrated Sulphuric Acid (H2SO4) down the inner wall so it forms a layer underneath."
+                    ],
+                    results: [
+                        "Positive Result: Appearance of a reddish-violet or purple ring at the junction of the two liquid layers.",
+                        "Negative Result: No purple ring formed."
+                    ],
+                    inference: "Formation of a purple junction ring confirms the presence of Carbohydrates."
+                }
             },
             {
                 id: "barfoeds",
@@ -610,7 +743,19 @@
                     "Add {Glacial Acetic Acid} mL of glacial acetic acid to the solution and stir thoroughly.",
                     "Filter if any undissolved precipitate remains."
                 ],
-                storage: "Store in a standard reagent bottle at room temperature."
+                storage: "Store in a standard reagent bottle at room temperature.",
+                testProtocol: {
+                    steps: [
+                        "Take 2 mL of Barfoed's reagent in a test tube.",
+                        "Add 1 mL of the test sugar solution.",
+                        "Place in a boiling water bath for strictly 3 minutes."
+                    ],
+                    results: [
+                        "Positive Result (Monosaccharide): Red cuprous oxide precipitate forms within 3 minutes.",
+                        "Disaccharides: No precipitate within 3 minutes (may precipitate after prolonged boiling > 10 min)."
+                    ],
+                    inference: "Rapid red precipitate formation within 3 minutes indicates a Monosaccharide."
+                }
             },
             {
                 id: "esbachs",
@@ -626,7 +771,19 @@
                     "Dissolve {Picric Acid} g of picric acid and {Citric Acid} g of citric acid in approximately {water800} mL of distilled water.",
                     "Mix until completely clear and bring the final volume to {vol} mL with distilled water."
                 ],
-                storage: "Store in a glass container at room temperature away from ignition sources."
+                storage: "Store in a glass container at room temperature away from ignition sources.",
+                testProtocol: {
+                    steps: [
+                        "Take 3 mL of test sample solution (or clear urine sample) in an Esbach tube or test tube.",
+                        "Add an equal volume (3 mL) of Esbach's reagent.",
+                        "Mix gently and allow to stand undisturbed for 30 minutes (or overnight for quantitative reading)."
+                    ],
+                    results: [
+                        "Positive Result: Formation of a dense yellow precipitate.",
+                        "Negative Result: Solution stays clear."
+                    ],
+                    inference: "Yellow precipitate confirms the presence of Albumin / Proteins."
+                }
             },
             {
                 id: "fouchets",
@@ -643,7 +800,19 @@
                     "Add {Ferric Chloride (10% w/v aqueous solution)} mL of 10% aqueous ferric chloride solution.",
                     "Bring the total final volume to {vol} mL using distilled water and mix thoroughly."
                 ],
-                storage: "Store in an amber glass bottle."
+                storage: "Store in an amber glass bottle.",
+                testProtocol: {
+                    steps: [
+                        "Mix 5 mL of urine sample with 2.5 mL of 10% Barium Chloride solution and filter.",
+                        "Unfold the filter paper containing the precipitated barium sulfate-bilirubin complex.",
+                        "Add 1 to 2 drops of Fouchet's reagent directly onto the precipitate on the filter paper."
+                    ],
+                    results: [
+                        "Positive Result: Development of a distinctive green to blue-green color spot.",
+                        "Negative Result: No color change (remains white/pale)."
+                    ],
+                    inference: "Green color development indicates oxidation of Bilirubin to Biliverdin."
+                }
             },
             {
                 id: "benedicts",
@@ -662,7 +831,19 @@
                     "Slowly pour the copper sulfate solution into the citrate-carbonate solution with continuous stirring.",
                     "Dilute the final solution to {vol} mL with distilled water."
                 ],
-                storage: "Store in a clear or amber bottle at room temperature (stable for long periods)."
+                storage: "Store in a clear or amber bottle at room temperature (stable for long periods).",
+                testProtocol: {
+                    steps: [
+                        "Take 5 mL of Benedict's reagent in a test tube.",
+                        "Add 8 drops (approx 0.5 mL) of the test carbohydrate solution.",
+                        "Heat in a boiling water bath for 3 to 5 minutes and allow to cool."
+                    ],
+                    results: [
+                        "Positive Result: Solution changes from clear blue to Green (+), Yellow (++), Orange (+++), or Brick-Red (++++) precipitate based on sugar concentration.",
+                        "Negative Result: Remains clear blue."
+                    ],
+                    inference: "Precipitate formation confirms the presence of Reducing Sugars."
+                }
             },
             {
                 id: "tollens",
@@ -681,7 +862,19 @@
                     "Add concentrated ammonia dropwise with constant swirling just until the brown precipitate completely redissolves.",
                     "Dilute to {vol} mL with distilled water."
                 ],
-                storage: "MUST BE PREPARED FRESH BEFORE USE. Do not store Tollen's reagent after testing due to explosive silver nitride formation."
+                storage: "MUST BE PREPARED FRESH BEFORE USE. Do not store Tollen's reagent after testing due to explosive silver nitride formation.",
+                testProtocol: {
+                    steps: [
+                        "Take 2 mL of freshly prepared Tollens' reagent in a clean test tube.",
+                        "Add 3 to 5 drops of aldehyde or test sample solution.",
+                        "Warm gently in a water bath at 50–60°C for 5 minutes without shaking."
+                    ],
+                    results: [
+                        "Positive Result: A shiny metallic Silver Mirror forms on the inner glass wall of the test tube, or a dark grey/black precipitate.",
+                        "Negative Result: Solution remains clear with no silver deposition."
+                    ],
+                    inference: "Silver mirror formation confirms Aldehydes or Reducing Sugars."
+                }
             },
             {
                 id: "dragendorffs",
@@ -700,7 +893,18 @@
                     "Part B: Dissolve {Part B: Potassium Iodide (KI)} g of KI in {Part B: Distilled water} mL water.",
                     "Working Solution: Combine equal parts of Stock A and Stock B (e.g. {water5} mL A + {water5} mL B), add {water20} mL glacial acetic acid, and dilute with distilled water to bring final batch volume to {vol} mL."
                 ],
-                storage: "Store stock solutions (A & B) in dark bottles. Keep working solution protected from light."
+                storage: "Store stock solutions (A & B) in dark bottles. Keep working solution protected from light.",
+                testProtocol: {
+                    steps: [
+                        "Take 1 to 2 mL of acidic test solution (or alkaloid extract) in a test tube.",
+                        "Add a few drops of Dragendorff's reagent."
+                    ],
+                    results: [
+                        "Positive Result: Formation of an intense Orange or Reddish-Brown precipitate.",
+                        "Negative Result: Solution remains clear or pale yellow."
+                    ],
+                    inference: "Orange / Reddish-Brown precipitate confirms the presence of Alkaloids."
+                }
             },
             {
                 id: "fehlings",
@@ -719,7 +923,19 @@
                     "Prepare Solution B: Dissolve {Fehling's B: Potassium Sodium Tartrate} g Rochelle salt and {Fehling's B: Sodium Hydroxide (NaOH)} g NaOH in water, dilute to {water500} mL.",
                     "Mix equal volumes (1:1) of Fehling's A and Fehling's B immediately prior to performing the test."
                 ],
-                storage: "Store Fehling's A and B in separate bottles. Do not store pre-mixed solution."
+                storage: "Store Fehling's A and B in separate bottles. Do not store pre-mixed solution.",
+                testProtocol: {
+                    steps: [
+                        "Mix 1 mL of Fehling's A and 1 mL of Fehling's B in a test tube to get a clear deep blue solution.",
+                        "Add 1 mL of the test carbohydrate or aldehyde solution.",
+                        "Heat in a boiling water bath for 5 minutes."
+                    ],
+                    results: [
+                        "Positive Result: Formation of a Brick-Red precipitate of Cuprous Oxide (Cu2O).",
+                        "Negative Result: Solution stays clear blue."
+                    ],
+                    inference: "Brick-red precipitate confirms Reducing Sugars / Aliphatic Aldehydes."
+                }
             },
             {
                 id: "wagners",
@@ -736,7 +952,18 @@
                     "Add {Iodine (I2)} g of iodine crystals and stir until completely dissolved.",
                     "Dilute with distilled water to make {vol} mL."
                 ],
-                storage: "Store in an amber glass bottle protected from light exposure."
+                storage: "Store in an amber glass bottle protected from light exposure.",
+                testProtocol: {
+                    steps: [
+                        "Take 1 to 2 mL of acidified test extract in a test tube.",
+                        "Add 2 to 3 drops of Wagner's reagent along the tube wall."
+                    ],
+                    results: [
+                        "Positive Result: Formation of a Reddish-Brown precipitate.",
+                        "Negative Result: Solution remains clear brown without precipitation."
+                    ],
+                    inference: "Reddish-brown precipitate indicates the presence of Alkaloids."
+                }
             },
             {
                 id: "hagers",
@@ -751,7 +978,18 @@
                     "Add {Picric Acid} g of picric acid to {Distilled water} mL of boiling distilled water.",
                     "Stir until completely dissolved, allow to cool to room temperature, and filter off any undissolved residue."
                 ],
-                storage: "Store the saturated aqueous solution in a sealed glass bottle."
+                storage: "Store the saturated aqueous solution in a sealed glass bottle.",
+                testProtocol: {
+                    steps: [
+                        "Take 1 to 2 mL of the test solution (acidified extract) in a test tube.",
+                        "Add 3 to 4 drops of Hager's reagent."
+                    ],
+                    results: [
+                        "Positive Result: Formation of a bright Yellow crystalline precipitate (alkaloidal picrate).",
+                        "Negative Result: Solution remains clear yellow."
+                    ],
+                    inference: "Yellow precipitate confirms the presence of Alkaloids."
+                }
             },
             {
                 id: "ninhydrin",
@@ -767,7 +1005,19 @@
                     "Dissolve the weighed ninhydrin completely in {Ethanol (95%) or Acetone} mL of 95% ethanol or acetone.",
                     "Stir gently until clear and store in an amber glass bottle."
                 ],
-                storage: "Store in an amber bottle at low temperatures (2–8°C)."
+                storage: "Store in an amber bottle at low temperatures (2–8°C).",
+                testProtocol: {
+                    steps: [
+                        "Take 1 mL of test amino acid or protein solution in a clean test tube.",
+                        "Add 5 to 10 drops of Ninhydrin reagent.",
+                        "Heat in a boiling water bath for 2 to 5 minutes."
+                    ],
+                    results: [
+                        "Positive Result: Formation of a deep Purple or Violet-Blue color (Ruhemann's purple). Note: Proline gives a yellow color.",
+                        "Negative Result: No color change (remains colorless/clear)."
+                    ],
+                    inference: "Purple-violet solution confirms Primary Alpha-Amino Acids or Proteins."
+                }
             }
         ];
 
@@ -792,6 +1042,22 @@
             }
         });
 
+        // Perform Test Accordion Toggle
+        const performTestBtn = document.getElementById('performTestToggle');
+        const performTestContent = document.getElementById('performTestContent');
+        const testToggleIcon = document.getElementById('testToggleIcon');
+
+        performTestBtn.addEventListener('click', () => {
+            const isOpen = performTestContent.classList.contains('open');
+            if (isOpen) {
+                performTestContent.classList.remove('open');
+                testToggleIcon.innerText = '▼';
+            } else {
+                performTestContent.classList.add('open');
+                testToggleIcon.innerText = '▲';
+            }
+        });
+
         // Populate search options
         const searchInput = document.getElementById('searchInput');
         const datalist = document.getElementById('reagentsList');
@@ -802,7 +1068,7 @@
             datalist.appendChild(opt);
         });
 
-        // Improved Search Input Listener
+        // Search Input Listener
         searchInput.addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase().trim();
             if (!val) return;
@@ -902,6 +1168,27 @@
                 li.innerText = formattedStep;
                 procList.appendChild(li);
             });
+
+            // Render Perform Test Protocol
+            if (reagent.testProtocol) {
+                const tProc = document.getElementById('tProcedure');
+                tProc.innerHTML = '';
+                reagent.testProtocol.steps.forEach(step => {
+                    const li = document.createElement('li');
+                    li.innerText = step;
+                    tProc.appendChild(li);
+                });
+
+                const tRes = document.getElementById('tResults');
+                tRes.innerHTML = '';
+                reagent.testProtocol.results.forEach(res => {
+                    const li = document.createElement('li');
+                    li.innerText = res;
+                    tRes.appendChild(li);
+                });
+
+                document.getElementById('tInference').innerText = reagent.testProtocol.inference;
+            }
         }
 
         // Theme Toggle
