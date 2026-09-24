@@ -641,103 +641,10 @@
         // Google Apps Script API Endpoint Deployment URL
         const GOOGLE_SHEETS_API_URL = "https://script.google.com/macros/s/AKfycby2qv8Ob9Bl7LztCij0ZfqNriqAu7kgOuKpIfjQNuuQiYSndWQDjdzlmYQ9A2_LcNZo/exec";
 
-        // Hardcoded Fallback Dataset (Used if offline before first online sync)
-        const fallbackReagentsData = [
-            {
-                id: "seliwanoff",
-                name: "Seliwanoff's Reagent",
-                use: "Distinction between aldose and ketose sugars (ketoses give a cherry-red color)",
-                baseVolume: 100,
-                ingredients: [
-                    { name: "Resorcinol", amount: 0.05, unit: "g" },
-                    { name: "Concentrated Hydrochloric Acid (HCl)", amount: 33, unit: "mL" },
-                    { name: "Distilled water", amount: 67, unit: "mL", note: "up to batch volume" }
-                ],
-                procedure: [
-                    "Measure {HCl} mL of concentrated HCl into a volumetric flask containing around {water} mL of distilled water.",
-                    "Add {Resorcinol} g of resorcinol and stir until fully dissolved.",
-                    "Bring the total volume to {vol} mL with distilled water."
-                ],
-                storage: "Store in a tightly closed, light-resistant container below 30°C.",
-                testProtocol: {
-                    steps: [
-                        "Take 2 mL of Seliwanoff's reagent in a clean, dry test tube.",
-                        "Add 0.5 mL (or 2–3 drops) of the test carbohydrate solution.",
-                        "Heat the test tube in a boiling water bath for 1 to 2 minutes."
-                    ],
-                    results: [
-                        "Positive Result: Rapid development of a cherry-red or fiery red solution.",
-                        "Negative Result: Light pink or no color change within 2 minutes (aldoses react much slower)."
-                    ],
-                    inference: "Cherry-red color confirms the presence of a Ketose sugar (e.g., Fructose, Sucrose)."
-                }
-            },
-            {
-                id: "mayers",
-                name: "Mayer's Reagent",
-                use: "Qualitative detection of alkaloids (forms a cream-colored precipitate)",
-                baseVolume: 100,
-                ingredients: [
-                    { name: "Mercuric Chloride (HgCl2)", amount: 1.36, unit: "g" },
-                    { name: "Potassium Iodide (KI)", amount: 5.00, unit: "g" },
-                    { name: "Distilled water", amount: 100, unit: "mL", note: "total solution volume" }
-                ],
-                procedure: [
-                    "Dissolve {Mercuric Chloride (HgCl2)} g of HgCl2 in {water60} mL of distilled water.",
-                    "Dissolve {Potassium Iodide (KI)} g of KI in {water10} mL of distilled water.",
-                    "Combine both solutions slowly while stirring to form the active complex, potassium tetraiodomercurate(II).",
-                    "Dilute with distilled water to a final volume of {vol} mL."
-                ],
-                storage: "Store in a dark, light-protected glass bottle.",
-                testProtocol: {
-                    steps: [
-                        "Take 1–2 mL of the acidic extract of the test sample (dissolved in dilute HCl or H2SO4) in a test tube.",
-                        "Add 2 to 3 drops of Mayer's reagent along the sides of the test tube."
-                    ],
-                    results: [
-                        "Positive Result: Formation of a cream-colored or pale yellow precipitate/turbidity.",
-                        "Negative Result: Solution remains clear with no precipitate."
-                    ],
-                    inference: "Presence of a cream precipitate indicates the positive presence of Alkaloids."
-                }
-            },
-            {
-                id: "benedicts",
-                name: "Benedict's Reagent",
-                use: "Qualitative detection of reducing sugars (forms a red, orange, or green cuprous oxide precipitate)",
-                baseVolume: 1000,
-                ingredients: [
-                    { name: "Sodium Citrate", amount: 173, unit: "g" },
-                    { name: "Anhydrous Sodium Carbonate (Na2CO3)", amount: 100, unit: "g" },
-                    { name: "Copper(II) Sulfate Pentahydrate (CuSO4.5H2O)", amount: 17.3, unit: "g" },
-                    { name: "Distilled water", amount: 1000, unit: "mL", note: "up to total volume" }
-                ],
-                procedure: [
-                    "Dissolve {Sodium Citrate} g of sodium citrate and {Anhydrous Sodium Carbonate (Na2CO3)} g of anhydrous sodium carbonate in about {water800} mL of distilled water using gentle heat. Filter if necessary.",
-                    "Separately, dissolve {Copper(II) Sulfate Pentahydrate (CuSO4.5H2O)} g of copper sulfate pentahydrate in {water100} mL of distilled water.",
-                    "Slowly pour the copper sulfate solution into the citrate-carbonate solution with continuous stirring.",
-                    "Dilute the final solution to {vol} mL with distilled water."
-                ],
-                storage: "Store in a clear or amber bottle at room temperature (stable for long periods).",
-                testProtocol: {
-                    steps: [
-                        "Take 5 mL of Benedict's reagent in a test tube.",
-                        "Add 8 drops (approx 0.5 mL) of the test carbohydrate solution.",
-                        "Heat in a boiling water bath for 3 to 5 minutes and allow to cool."
-                    ],
-                    results: [
-                        "Positive Result: Solution changes from clear blue to Green (+), Yellow (++), Orange (+++), or Brick-Red (++++) precipitate based on sugar concentration.",
-                        "Negative Result: Remains clear blue."
-                    ],
-                    inference: "Precipitate formation confirms the presence of Reducing Sugars."
-                }
-            }
-        ];
-
         let reagentsData = [];
         let selectedReagent = null;
 
-        // Fetch Reagent Data with Offline-First Strategy
+        // Fetch Reagent Data directly from API / Local Cache
         async function fetchReagentData() {
             try {
                 const response = await fetch(GOOGLE_SHEETS_API_URL);
@@ -747,15 +654,18 @@
                 localStorage.setItem('cachedReagentsData', JSON.stringify(reagentsData));
                 console.log("Reagent database successfully synchronized with Google Sheets.");
             } catch (error) {
-                console.warn("Offline or network fetch failed. Loading cached/fallback reagent database...", error);
+                console.warn("Offline or network fetch failed. Checking local storage cache...", error);
                 const localData = localStorage.getItem('cachedReagentsData');
                 if (localData) {
                     reagentsData = JSON.parse(localData);
                 } else {
-                    reagentsData = fallbackReagentsData;
+                    document.getElementById('placeholderCard').innerText = 
+                        "Offline mode: No cached reagent database found. Please connect to the internet once to sync database.";
                 }
             } finally {
-                populateDatalist();
+                if (reagentsData.length > 0) {
+                    populateDatalist();
+                }
             }
         }
 
@@ -910,9 +820,12 @@
                                              .replaceAll('{water5}', (5 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water10}', (10 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water20}', (20 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water35}', (35 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water50}', (50 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water60}', (60 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water80}', (80 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water100}', (100 * factor).toFixed(1).replace(/\.0$/, ''))
+                                             .replaceAll('{water300}', (300 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water500}', (500 * factor).toFixed(1).replace(/\.0$/, ''))
                                              .replaceAll('{water800}', (800 * factor).toFixed(1).replace(/\.0$/, ''));
 
