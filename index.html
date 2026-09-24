@@ -97,6 +97,28 @@
             color: var(--text-secondary);
             font-weight: 500;
             margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .status-badge.online {
+            background-color: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+        }
+
+        .status-badge.offline {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
         }
 
         .header-controls {
@@ -463,7 +485,10 @@
     <header>
         <div class="header-title">
             <h1>SPECIAL REAGENT MAKER</h1>
-            <div class="author">by Joash Sam</div>
+            <div class="author">
+                <span>by Joash Sam</span>
+                <span id="networkStatus" class="status-badge online">● Online</span>
+            </div>
         </div>
         <div class="header-controls">
             <button class="btn-icon" id="installBtn">📲 Install App</button>
@@ -519,7 +544,7 @@
                         <span id="rStorage">Storage information...</span>
                     </div>
 
-                    <!-- NEW: Perform Test Section -->
+                    <!-- Perform Test Section -->
                     <div class="perform-test-wrapper">
                         <button class="perform-test-btn" id="performTestToggle">
                             <span>🔬 Perform Test Section (Protocol & Inferences)</span>
@@ -613,7 +638,11 @@
     </footer>
 
     <script>
-        const reagentsData = [
+        // Google Apps Script API Endpoint Deployment URL
+        const GOOGLE_SHEETS_API_URL = "https://script.google.com/macros/s/AKfycby2qv8Ob9Bl7LztCij0ZfqNriqAu7kgOuKpIfjQNuuQiYSndWQDjdzlmYQ9A2_LcNZo/exec";
+
+        // Hardcoded Fallback Dataset (Used if offline before first online sync)
+        const fallbackReagentsData = [
             {
                 id: "seliwanoff",
                 name: "Seliwanoff's Reagent",
@@ -673,148 +702,6 @@
                 }
             },
             {
-                id: "millons",
-                name: "Millon's Reagent",
-                use: "Detection of phenolic amino acids (e.g., tyrosine) and proteins",
-                baseVolume: 60,
-                ingredients: [
-                    { name: "Metallic Mercury", amount: 10, unit: "g" },
-                    { name: "Concentrated Nitric Acid (HNO3)", amount: 10, unit: "mL" },
-                    { name: "Distilled water", amount: 40, unit: "mL" }
-                ],
-                procedure: [
-                    "Under a fume hood, carefully dissolve {Metallic Mercury} g of mercury in {Concentrated Nitric Acid (HNO3)} mL of concentrated HNO3 (generates toxic fumes).",
-                    "Once the metal dissolves, add {Distilled water} mL of distilled water slowly.",
-                    "Filter to remove any undissolved mercury or particulate residue."
-                ],
-                storage: "Store in a heavy glass bottle in a ventilated chemical storage area.",
-                testProtocol: {
-                    steps: [
-                        "Take 2 mL of protein sample solution in a test tube.",
-                        "Add 5 to 6 drops of Millon's reagent and mix well (a white precipitate initially forms).",
-                        "Gently heat the mixture over a Bunsen flame or in a boiling water bath for 2 minutes."
-                    ],
-                    results: [
-                        "Positive Result: The white precipitate turns brick-red, or the solution turns red upon heating.",
-                        "Negative Result: Precipitate remains white or no color change."
-                    ],
-                    inference: "Brick-red precipitate confirms Phenolic group-containing amino acids (e.g., Tyrosine) and Proteins."
-                }
-            },
-            {
-                id: "molisch",
-                name: "Molisch's Reagent",
-                use: "General qualitative detection for carbohydrates (forms a purple ring at the junction)",
-                baseVolume: 25,
-                ingredients: [
-                    { name: "alpha-Naphthol", amount: 1.25, unit: "g" },
-                    { name: "Ethanol (95%)", amount: 25, unit: "mL" }
-                ],
-                procedure: [
-                    "Weigh {alpha-Naphthol} g of alpha-naphthol.",
-                    "Dissolve completely in {Ethanol (95%)} mL of 95% ethanol with gentle stirring."
-                ],
-                storage: "Store in an amber glass bottle protected from heat and open flame.",
-                testProtocol: {
-                    steps: [
-                        "Take 2 mL of the test solution in a clean test tube.",
-                        "Add 2 drops of Molisch's reagent and mix thoroughly.",
-                        "Incline the test tube and carefully pour 1 to 2 mL of concentrated Sulphuric Acid (H2SO4) down the inner wall so it forms a layer underneath."
-                    ],
-                    results: [
-                        "Positive Result: Appearance of a reddish-violet or purple ring at the junction of the two liquid layers.",
-                        "Negative Result: No purple ring formed."
-                    ],
-                    inference: "Formation of a purple junction ring confirms the presence of Carbohydrates."
-                }
-            },
-            {
-                id: "barfoeds",
-                name: "Barfoed's Reagent",
-                use: "Differentiating monosaccharides from disaccharides",
-                baseVolume: 200,
-                ingredients: [
-                    { name: "Copper(II) Acetate Monohydrate", amount: 13.3, unit: "g" },
-                    { name: "Glacial Acetic Acid", amount: 1.8, unit: "mL" },
-                    { name: "Distilled water", amount: 200, unit: "mL", note: "up to final volume" }
-                ],
-                procedure: [
-                    "Dissolve {Copper(II) Acetate Monohydrate} g of copper acetate monohydrate in {vol} mL of distilled water.",
-                    "Add {Glacial Acetic Acid} mL of glacial acetic acid to the solution and stir thoroughly.",
-                    "Filter if any undissolved precipitate remains."
-                ],
-                storage: "Store in a standard reagent bottle at room temperature.",
-                testProtocol: {
-                    steps: [
-                        "Take 2 mL of Barfoed's reagent in a test tube.",
-                        "Add 1 mL of the test sugar solution.",
-                        "Place in a boiling water bath for strictly 3 minutes."
-                    ],
-                    results: [
-                        "Positive Result (Monosaccharide): Red cuprous oxide precipitate forms within 3 minutes.",
-                        "Disaccharides: No precipitate within 3 minutes (may precipitate after prolonged boiling > 10 min)."
-                    ],
-                    inference: "Rapid red precipitate formation within 3 minutes indicates a Monosaccharide."
-                }
-            },
-            {
-                id: "esbachs",
-                name: "Esbach's Reagent",
-                use: "Detection and quantitative estimation of albumin in protein samples",
-                baseVolume: 1000,
-                ingredients: [
-                    { name: "Picric Acid", amount: 10, unit: "g" },
-                    { name: "Citric Acid", amount: 20, unit: "g" },
-                    { name: "Distilled water", amount: 1000, unit: "mL", note: "up to total volume" }
-                ],
-                procedure: [
-                    "Dissolve {Picric Acid} g of picric acid and {Citric Acid} g of citric acid in approximately {water800} mL of distilled water.",
-                    "Mix until completely clear and bring the final volume to {vol} mL with distilled water."
-                ],
-                storage: "Store in a glass container at room temperature away from ignition sources.",
-                testProtocol: {
-                    steps: [
-                        "Take 3 mL of test sample solution (or clear urine sample) in an Esbach tube or test tube.",
-                        "Add an equal volume (3 mL) of Esbach's reagent.",
-                        "Mix gently and allow to stand undisturbed for 30 minutes (or overnight for quantitative reading)."
-                    ],
-                    results: [
-                        "Positive Result: Formation of a dense yellow precipitate.",
-                        "Negative Result: Solution stays clear."
-                    ],
-                    inference: "Yellow precipitate confirms the presence of Albumin / Proteins."
-                }
-            },
-            {
-                id: "fouchets",
-                name: "Fouchet's Reagent (25%)",
-                use: "Detection of bilirubin in biological samples (yields a green complex)",
-                baseVolume: 100,
-                ingredients: [
-                    { name: "Trichloroacetic Acid (TCA)", amount: 25, unit: "g" },
-                    { name: "Ferric Chloride (10% w/v aqueous solution)", amount: 10, unit: "mL" },
-                    { name: "Distilled water", amount: 100, unit: "mL", note: "up to total volume" }
-                ],
-                procedure: [
-                    "Dissolve {Trichloroacetic Acid (TCA)} g of TCA in {water50} mL of distilled water.",
-                    "Add {Ferric Chloride (10% w/v aqueous solution)} mL of 10% aqueous ferric chloride solution.",
-                    "Bring the total final volume to {vol} mL using distilled water and mix thoroughly."
-                ],
-                storage: "Store in an amber glass bottle.",
-                testProtocol: {
-                    steps: [
-                        "Mix 5 mL of urine sample with 2.5 mL of 10% Barium Chloride solution and filter.",
-                        "Unfold the filter paper containing the precipitated barium sulfate-bilirubin complex.",
-                        "Add 1 to 2 drops of Fouchet's reagent directly onto the precipitate on the filter paper."
-                    ],
-                    results: [
-                        "Positive Result: Development of a distinctive green to blue-green color spot.",
-                        "Negative Result: No color change (remains white/pale)."
-                    ],
-                    inference: "Green color development indicates oxidation of Bilirubin to Biliverdin."
-                }
-            },
-            {
                 id: "benedicts",
                 name: "Benedict's Reagent",
                 use: "Qualitative detection of reducing sugars (forms a red, orange, or green cuprous oxide precipitate)",
@@ -844,184 +731,62 @@
                     ],
                     inference: "Precipitate formation confirms the presence of Reducing Sugars."
                 }
-            },
-            {
-                id: "tollens",
-                name: "Tollens' Reagent (Ammoniacal Silver Nitrate)",
-                use: "Detection of aldehydes and reducing sugars (yields a silver mirror effect)",
-                baseVolume: 20,
-                ingredients: [
-                    { name: "Silver Nitrate (AgNO3)", amount: 1.0, unit: "g" },
-                    { name: "Sodium Hydroxide (10% w/v solution)", amount: 1.0, unit: "mL" },
-                    { name: "Concentrated Ammonia (NH3) solution", amount: 1.0, unit: "mL", note: "added dropwise" },
-                    { name: "Distilled water", amount: 20, unit: "mL", note: "up to final volume" }
-                ],
-                procedure: [
-                    "Dissolve {Silver Nitrate (AgNO3)} g of AgNO3 in {water10} mL of distilled water.",
-                    "Add {Sodium Hydroxide (10% w/v solution)} mL of 10% NaOH solution to form a dark brown silver oxide precipitate.",
-                    "Add concentrated ammonia dropwise with constant swirling just until the brown precipitate completely redissolves.",
-                    "Dilute to {vol} mL with distilled water."
-                ],
-                storage: "MUST BE PREPARED FRESH BEFORE USE. Do not store Tollen's reagent after testing due to explosive silver nitride formation.",
-                testProtocol: {
-                    steps: [
-                        "Take 2 mL of freshly prepared Tollens' reagent in a clean test tube.",
-                        "Add 3 to 5 drops of aldehyde or test sample solution.",
-                        "Warm gently in a water bath at 50–60°C for 5 minutes without shaking."
-                    ],
-                    results: [
-                        "Positive Result: A shiny metallic Silver Mirror forms on the inner glass wall of the test tube, or a dark grey/black precipitate.",
-                        "Negative Result: Solution remains clear with no silver deposition."
-                    ],
-                    inference: "Silver mirror formation confirms Aldehydes or Reducing Sugars."
-                }
-            },
-            {
-                id: "dragendorffs",
-                name: "Dragendorff's Reagent",
-                use: "Detection of alkaloids (yields an orange/reddish-brown precipitate)",
-                baseVolume: 100,
-                ingredients: [
-                    { name: "Part A: Bismuth Subnitrate", amount: 0.85, unit: "g" },
-                    { name: "Part A: Glacial Acetic Acid", amount: 10, unit: "mL" },
-                    { name: "Part A: Distilled water", amount: 40, unit: "mL" },
-                    { name: "Part B: Potassium Iodide (KI)", amount: 8.0, unit: "g" },
-                    { name: "Part B: Distilled water", amount: 20, unit: "mL" }
-                ],
-                procedure: [
-                    "Part A: Dissolve {Part A: Bismuth Subnitrate} g of bismuth subnitrate in {Part A: Glacial Acetic Acid} mL glacial acetic acid and {Part A: Distilled water} mL water.",
-                    "Part B: Dissolve {Part B: Potassium Iodide (KI)} g of KI in {Part B: Distilled water} mL water.",
-                    "Working Solution: Combine equal parts of Stock A and Stock B (e.g. {water5} mL A + {water5} mL B), add {water20} mL glacial acetic acid, and dilute with distilled water to bring final batch volume to {vol} mL."
-                ],
-                storage: "Store stock solutions (A & B) in dark bottles. Keep working solution protected from light.",
-                testProtocol: {
-                    steps: [
-                        "Take 1 to 2 mL of acidic test solution (or alkaloid extract) in a test tube.",
-                        "Add a few drops of Dragendorff's reagent."
-                    ],
-                    results: [
-                        "Positive Result: Formation of an intense Orange or Reddish-Brown precipitate.",
-                        "Negative Result: Solution remains clear or pale yellow."
-                    ],
-                    inference: "Orange / Reddish-Brown precipitate confirms the presence of Alkaloids."
-                }
-            },
-            {
-                id: "fehlings",
-                name: "Fehling's Reagent (A & B)",
-                use: "Differentiation of aldehydes and reducing sugars",
-                baseVolume: 1000,
-                ingredients: [
-                    { name: "Fehling's A: Copper(II) Sulfate Pentahydrate", amount: 34.66, unit: "g" },
-                    { name: "Fehling's A: Distilled water", amount: 500, unit: "mL" },
-                    { name: "Fehling's B: Potassium Sodium Tartrate", amount: 173, unit: "g" },
-                    { name: "Fehling's B: Sodium Hydroxide (NaOH)", amount: 50, unit: "g" },
-                    { name: "Fehling's B: Distilled water", amount: 500, unit: "mL" }
-                ],
-                procedure: [
-                    "Prepare Solution A: Dissolve {Fehling's A: Copper(II) Sulfate Pentahydrate} g in water and dilute to {water500} mL.",
-                    "Prepare Solution B: Dissolve {Fehling's B: Potassium Sodium Tartrate} g Rochelle salt and {Fehling's B: Sodium Hydroxide (NaOH)} g NaOH in water, dilute to {water500} mL.",
-                    "Mix equal volumes (1:1) of Fehling's A and Fehling's B immediately prior to performing the test."
-                ],
-                storage: "Store Fehling's A and B in separate bottles. Do not store pre-mixed solution.",
-                testProtocol: {
-                    steps: [
-                        "Mix 1 mL of Fehling's A and 1 mL of Fehling's B in a test tube to get a clear deep blue solution.",
-                        "Add 1 mL of the test carbohydrate or aldehyde solution.",
-                        "Heat in a boiling water bath for 5 minutes."
-                    ],
-                    results: [
-                        "Positive Result: Formation of a Brick-Red precipitate of Cuprous Oxide (Cu2O).",
-                        "Negative Result: Solution stays clear blue."
-                    ],
-                    inference: "Brick-red precipitate confirms Reducing Sugars / Aliphatic Aldehydes."
-                }
-            },
-            {
-                id: "wagners",
-                name: "Wagner's Reagent",
-                use: "Qualitative detection of alkaloids (yields a reddish-brown precipitate)",
-                baseVolume: 100,
-                ingredients: [
-                    { name: "Iodine (I2)", amount: 1.27, unit: "g" },
-                    { name: "Potassium Iodide (KI)", amount: 2.00, unit: "g" },
-                    { name: "Distilled water", amount: 100, unit: "mL", note: "up to total volume" }
-                ],
-                procedure: [
-                    "Dissolve {Potassium Iodide (KI)} g of KI in {water10} mL of distilled water.",
-                    "Add {Iodine (I2)} g of iodine crystals and stir until completely dissolved.",
-                    "Dilute with distilled water to make {vol} mL."
-                ],
-                storage: "Store in an amber glass bottle protected from light exposure.",
-                testProtocol: {
-                    steps: [
-                        "Take 1 to 2 mL of acidified test extract in a test tube.",
-                        "Add 2 to 3 drops of Wagner's reagent along the tube wall."
-                    ],
-                    results: [
-                        "Positive Result: Formation of a Reddish-Brown precipitate.",
-                        "Negative Result: Solution remains clear brown without precipitation."
-                    ],
-                    inference: "Reddish-brown precipitate indicates the presence of Alkaloids."
-                }
-            },
-            {
-                id: "hagers",
-                name: "Hager's Reagent",
-                use: "Detection of alkaloids (yields a yellow crystalline precipitate)",
-                baseVolume: 100,
-                ingredients: [
-                    { name: "Picric Acid", amount: 1.00, unit: "g" },
-                    { name: "Distilled water", amount: 100, unit: "mL" }
-                ],
-                procedure: [
-                    "Add {Picric Acid} g of picric acid to {Distilled water} mL of boiling distilled water.",
-                    "Stir until completely dissolved, allow to cool to room temperature, and filter off any undissolved residue."
-                ],
-                storage: "Store the saturated aqueous solution in a sealed glass bottle.",
-                testProtocol: {
-                    steps: [
-                        "Take 1 to 2 mL of the test solution (acidified extract) in a test tube.",
-                        "Add 3 to 4 drops of Hager's reagent."
-                    ],
-                    results: [
-                        "Positive Result: Formation of a bright Yellow crystalline precipitate (alkaloidal picrate).",
-                        "Negative Result: Solution remains clear yellow."
-                    ],
-                    inference: "Yellow precipitate confirms the presence of Alkaloids."
-                }
-            },
-            {
-                id: "ninhydrin",
-                name: "Ninhydrin Reagent",
-                use: "Identification of primary amino acids and proteins (yields a Ruhemann's purple complex)",
-                baseVolume: 100,
-                ingredients: [
-                    { name: "Ninhydrin (Indane-1,2,3-trione hydrate)", amount: 0.20, unit: "g" },
-                    { name: "Ethanol (95%) or Acetone", amount: 100, unit: "mL" }
-                ],
-                procedure: [
-                    "Weigh {Ninhydrin (Indane-1,2,3-trione hydrate)} g of ninhydrin powder to prepare a {conc}% (w/v) solution.",
-                    "Dissolve the weighed ninhydrin completely in {Ethanol (95%) or Acetone} mL of 95% ethanol or acetone.",
-                    "Stir gently until clear and store in an amber glass bottle."
-                ],
-                storage: "Store in an amber bottle at low temperatures (2–8°C).",
-                testProtocol: {
-                    steps: [
-                        "Take 1 mL of test amino acid or protein solution in a clean test tube.",
-                        "Add 5 to 10 drops of Ninhydrin reagent.",
-                        "Heat in a boiling water bath for 2 to 5 minutes."
-                    ],
-                    results: [
-                        "Positive Result: Formation of a deep Purple or Violet-Blue color (Ruhemann's purple). Note: Proline gives a yellow color.",
-                        "Negative Result: No color change (remains colorless/clear)."
-                    ],
-                    inference: "Purple-violet solution confirms Primary Alpha-Amino Acids or Proteins."
-                }
             }
         ];
 
+        let reagentsData = [];
         let selectedReagent = null;
+
+        // Fetch Reagent Data with Offline-First Strategy
+        async function fetchReagentData() {
+            try {
+                const response = await fetch(GOOGLE_SHEETS_API_URL);
+                if (!response.ok) throw new Error("Google Sheets API request failed");
+                
+                reagentsData = await response.json();
+                localStorage.setItem('cachedReagentsData', JSON.stringify(reagentsData));
+                console.log("Reagent database successfully synchronized with Google Sheets.");
+            } catch (error) {
+                console.warn("Offline or network fetch failed. Loading cached/fallback reagent database...", error);
+                const localData = localStorage.getItem('cachedReagentsData');
+                if (localData) {
+                    reagentsData = JSON.parse(localData);
+                } else {
+                    reagentsData = fallbackReagentsData;
+                }
+            } finally {
+                populateDatalist();
+            }
+        }
+
+        // Network Status Event Listeners
+        function updateNetworkStatus() {
+            const badge = document.getElementById('networkStatus');
+            if (navigator.onLine) {
+                badge.className = 'status-badge online';
+                badge.innerText = '● Online';
+            } else {
+                badge.className = 'status-badge offline';
+                badge.innerText = '● Offline';
+            }
+        }
+
+        window.addEventListener('online', () => {
+            updateNetworkStatus();
+            fetchReagentData();
+        });
+        window.addEventListener('offline', updateNetworkStatus);
+
+        // Populate search options
+        function populateDatalist() {
+            const datalist = document.getElementById('reagentsList');
+            datalist.innerHTML = '';
+            reagentsData.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r.name;
+                datalist.appendChild(opt);
+            });
+        }
 
         // Collapsible Sidebar Handlers
         const sidebarToggle = document.getElementById('sidebarToggle');
@@ -1058,17 +823,8 @@
             }
         });
 
-        // Populate search options
-        const searchInput = document.getElementById('searchInput');
-        const datalist = document.getElementById('reagentsList');
-
-        reagentsData.forEach(r => {
-            const opt = document.createElement('option');
-            opt.value = r.name;
-            datalist.appendChild(opt);
-        });
-
         // Search Input Listener
+        const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase().trim();
             if (!val) return;
@@ -1266,7 +1022,12 @@
             document.getElementById('convResult').innerText = `${val} ${from} = ${result.toLocaleString(undefined, {maximumFractionDigits: 4})} ${to}`;
         }
 
-        updateConvUnits();
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateNetworkStatus();
+            updateConvUnits();
+            fetchReagentData();
+        });
 
         // PWA Installation & Service Worker Logic
         if ('serviceWorker' in navigator) {
