@@ -1,8 +1,3 @@
-Here is a complete, professional **README.md** file structured for your GitHub repository. It highlights the scientific functionality, architectural stack, and features while giving full author attribution.
-
----
-
-```markdown
 # 🧪 SPECIAL REAGENT MAKER
 
 > **A Dynamic Web Utility for Laboratory Reagent Preparation & Recipe Scaling**
