@@ -769,7 +769,10 @@
                 return;
             }
 
-            const matches = reagentsData.filter(r => r.name.toLowerCase().includes(val));
+            // User-friendly search normalization handling apostrophes, spaces, and hyphens (e.g. "benedicts" matches "Benedict's")
+            const normalize = str => str.toLowerCase().replace(/['\s-]/g, '');
+            const queryNorm = normalize(val);
+            const matches = reagentsData.filter(r => normalize(r.name).includes(queryNorm));
 
             if (matches.length === 0) {
                 suggestionsBox.classList.remove('active');
