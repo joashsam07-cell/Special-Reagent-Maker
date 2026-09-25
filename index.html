@@ -17,50 +17,55 @@
     </script>
     <meta name="google-site-verification" content="P6Mdk1RGkNOp1FRiAvc_6n_WMnMY3mo2BvgtLaBA4hQ" />
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SPECIAL REAGENT MAKER</title>
     
     <!-- PWA Manifest & Theme Color -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#090d16">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ReagentMaker">
 
     <style>
         :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --panel-border: #334155;
-            --text-primary: #f8fafc;
+            --bg-color: #090d16;
+            --panel-bg: #131d31;
+            --panel-border: #1e293b;
+            --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --accent-color: #38bdf8;
-            --accent-hover: #0284c7;
-            --input-bg: #0f172a;
-            --card-bg: #1e293b;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --sidebar-width: 320px;
+            --accent-hover: #0ea5e9;
+            --accent-glow: rgba(56, 189, 248, 0.15);
+            --input-bg: #0b1322;
+            --card-bg: #131d31;
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --sidebar-width: 360px;
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
         }
 
         [data-theme="light"] {
-            --bg-color: #f1f5f9;
+            --bg-color: #f8fafc;
             --panel-bg: #ffffff;
-            --panel-border: #cbd5e1;
+            --panel-border: #e2e8f0;
             --text-primary: #0f172a;
             --text-secondary: #64748b;
             --accent-color: #0284c7;
             --accent-hover: #0369a1;
-            --input-bg: #f8fafc;
+            --accent-glow: rgba(2, 132, 199, 0.1);
+            --input-bg: #f1f5f9;
             --card-bg: #ffffff;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -70,60 +75,68 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            letter-spacing: -0.01em;
         }
 
+        /* Top Header */
         header {
             background-color: var(--panel-bg);
             border-bottom: 1px solid var(--panel-border);
-            padding: 1.25rem 2rem;
+            padding: 0.85rem 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background-color: rgba(19, 29, 49, 0.85);
+        }
+
+        [data-theme="light"] header {
+            background-color: rgba(255, 255, 255, 0.85);
         }
 
         .header-title h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.3px;
             color: var(--accent-color);
         }
 
         .header-title .author {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
             font-weight: 500;
-            margin-top: 2px;
+            margin-top: 1px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .status-badge {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-size: 0.65rem;
+            padding: 1px 6px;
+            border-radius: 20px;
             font-weight: 600;
         }
 
         .status-badge.online {
-            background-color: rgba(34, 197, 94, 0.2);
+            background-color: rgba(34, 197, 94, 0.15);
             color: #22c55e;
-            border: 1px solid #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
         }
 
         .status-badge.offline {
-            background-color: rgba(239, 68, 68, 0.2);
+            background-color: rgba(239, 68, 68, 0.15);
             color: #ef4444;
-            border: 1px solid #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
         .header-controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
             align-items: center;
         }
 
@@ -131,31 +144,34 @@
             background: var(--input-bg);
             border: 1px solid var(--panel-border);
             color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-weight: 600;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.35rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:active {
+            transform: scale(0.96);
         }
 
         .btn-icon:hover {
             border-color: var(--accent-color);
+            background: var(--accent-glow);
         }
 
         #installBtn {
-            background-color: var(--accent-color);
-            color: #0f172a;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: #ffffff;
             border: none;
             display: none;
         }
 
-        #installBtn:hover {
-            background-color: var(--accent-hover);
-            color: #ffffff;
-        }
-
+        /* App Layout Container */
         .app-container {
             display: flex;
             flex: 1;
@@ -165,15 +181,19 @@
 
         main {
             flex: 1;
-            padding: 2rem;
+            padding: 1.25rem;
             overflow-y: auto;
-            max-width: 1000px;
+            max-width: 840px;
             margin: 0 auto;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
 
+        /* Search Bar & Suggestions UX */
         .search-section {
-            margin-bottom: 2rem;
+            width: 100%;
         }
 
         .search-bar-wrapper {
@@ -183,75 +203,96 @@
 
         .search-bar-wrapper input {
             width: 100%;
-            padding: 1rem 3rem 1rem 1.25rem;
-            font-size: 1.1rem;
+            padding: 0.95rem 3rem 0.95rem 1.15rem;
+            font-size: 1rem;
             background-color: var(--input-bg);
             border: 2px solid var(--panel-border);
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             color: var(--text-primary);
             outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.25s ease;
         }
 
         .search-bar-wrapper input:focus {
             border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px var(--accent-glow), inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .dropdown-toggle-btn {
             position: absolute;
-            right: 14px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: transparent;
             border: none;
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            padding: 0.5rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.2s;
         }
 
         .dropdown-toggle-btn:hover {
+            background: var(--panel-border);
             color: var(--accent-color);
         }
 
-        /* Attached Dropdown Suggestions Box */
+        /* Dropdown Suggestions Box */
         .suggestions-dropdown {
             position: absolute;
-            top: calc(100% + 4px);
+            top: calc(100% + 8px);
             left: 0;
             right: 0;
             background-color: var(--panel-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            max-height: 260px;
+            border-radius: var(--radius-md);
+            max-height: 320px;
             overflow-y: auto;
             z-index: 50;
             display: none;
             box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .suggestions-dropdown.active {
             display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .suggestion-header {
-            padding: 0.75rem 1.25rem;
-            font-size: 0.85rem;
-            font-weight: 600;
+            padding: 0.75rem 1.15rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             color: var(--accent-color);
             background-color: var(--input-bg);
             border-bottom: 1px solid var(--panel-border);
-            cursor: default;
         }
 
         .suggestion-item {
-            padding: 0.85rem 1.25rem;
+            padding: 0.85rem 1.15rem;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
             color: var(--text-primary);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.15s;
         }
 
         .suggestion-item:last-child {
@@ -259,19 +300,36 @@
         }
 
         .suggestion-item:hover {
-            background-color: var(--input-bg);
+            background-color: var(--accent-glow);
             color: var(--accent-color);
+        }
+
+        /* Reagent Card Display */
+        #placeholderCard {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-secondary);
+            background: var(--card-bg);
+            border: 2px dashed var(--panel-border);
+            border-radius: var(--radius-lg);
+            font-size: 0.95rem;
         }
 
         .reagent-card {
             background-color: var(--card-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
             box-shadow: var(--shadow);
             display: none;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .reagent-card.active {
@@ -281,161 +339,216 @@
         .reagent-header {
             border-bottom: 1px solid var(--panel-border);
             padding-bottom: 1rem;
-        }
-
-        .reagent-header h2 {
-            font-size: 1.8rem;
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .use-tag {
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--accent-color);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            display: inline-block;
-            font-weight: 500;
-        }
-
-        .maker-section {
-            background-color: var(--input-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        .maker-section h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .volume-input-group {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .input-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .volume-input-group input {
-            width: 120px;
-            padding: 0.6rem 0.8rem;
-            font-size: 1rem;
-            background-color: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            color: var(--text-primary);
-        }
-
-        .ingredients-list, .procedure-list {
-            margin-left: 1.25rem;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
 
-        .storage-box {
-            background-color: rgba(234, 179, 8, 0.1);
-            border-left: 4px solid #eab308;
-            padding: 1rem;
-            border-radius: 4px;
+        .reagent-header h2 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            line-height: 1.2;
+        }
+
+        .use-tag {
+            background: var(--accent-glow);
+            color: var(--accent-color);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-self: flex-start;
+            font-weight: 600;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        /* Scaler Section */
+        .maker-section {
+            background-color: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-md);
+            padding: 1.15rem;
+        }
+
+        .maker-section h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .volume-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.15rem;
+            flex-wrap: wrap;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .input-item label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .volume-input-group input {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .volume-input-group input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .ingredients-list, .procedure-list {
+            padding-left: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
             font-size: 0.95rem;
+        }
+
+        .ingredients-list li, .procedure-list li {
+            line-height: 1.4;
+        }
+
+        .storage-box {
+            background-color: rgba(234, 179, 8, 0.08);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            border-left: 4px solid #eab308;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .storage-box strong {
+            color: #facc15;
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Perform Test Accordion Styles */
         .perform-test-wrapper {
             background-color: var(--input-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             overflow: hidden;
         }
 
         .perform-test-btn {
             width: 100%;
-            background-color: rgba(56, 189, 248, 0.08);
+            background-color: var(--accent-glow);
             color: var(--accent-color);
             border: none;
-            padding: 1rem 1.25rem;
-            font-size: 1.05rem;
+            padding: 0.95rem 1.15rem;
+            font-size: 0.95rem;
             font-weight: 700;
             text-align: left;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background 0.2s;
         }
 
         .perform-test-btn:hover {
-            background-color: rgba(56, 189, 248, 0.15);
+            background-color: rgba(56, 189, 248, 0.2);
         }
 
         .perform-test-content {
             display: none;
-            padding: 1.5rem;
+            padding: 1.15rem;
             border-top: 1px solid var(--panel-border);
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1.15rem;
+            background-color: var(--panel-bg);
         }
 
         .perform-test-content.open {
             display: flex;
+            animation: fadeIn 0.2s ease-out;
         }
 
         .test-block {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.35rem;
         }
 
         .test-block h4 {
-            font-size: 0.95rem;
+            font-size: 0.75rem;
             color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+        }
+
+        .test-block ul, .test-block ol {
+            padding-left: 1.15rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .inference-card {
+            background-color: var(--input-bg);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-left: 4px solid #22c55e;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .inference-card strong {
+            color: #22c55e;
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .test-block ul, .test-block ol {
-            margin-left: 1.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-            font-size: 0.95rem;
-        }
-
-        .inference-card {
-            background-color: var(--panel-bg);
-            border-left: 4px solid #22c55e;
-            padding: 0.75rem 1rem;
-            border-radius: 4px;
-            font-size: 0.95rem;
-        }
-
+        /* Sidebar Drawer */
         sidebar {
             width: var(--sidebar-width);
             background-color: var(--panel-bg);
             border-left: 1px solid var(--panel-border);
-            padding: 1.5rem;
+            padding: 1.25rem;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.25rem;
             overflow-y: auto;
             position: fixed;
-            top: 73px;
+            top: 0;
             right: 0;
-            bottom: 40px;
+            bottom: 0;
             transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-            z-index: 90;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         sidebar.open {
@@ -447,107 +560,146 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--panel-border);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.75rem;
         }
 
         .tools-title {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.1rem;
+            font-weight: 800;
             color: var(--accent-color);
         }
 
         .close-sidebar-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
+            background: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.9rem;
             cursor: pointer;
-            padding: 0.2rem 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
         }
 
         .close-sidebar-btn:hover {
-            color: var(--text-primary);
+            background: var(--accent-glow);
+            color: var(--accent-color);
         }
 
         .tool-card {
             background-color: var(--input-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
         .tool-card h4 {
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         .calc-display {
             width: 100%;
-            height: 40px;
+            height: 48px;
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             color: var(--text-primary);
             text-align: right;
-            padding: 0.5rem;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+            padding: 0.5rem 0.85rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            outline: none;
         }
 
         .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 0.4rem;
+            gap: 0.35rem;
         }
 
         .calc-btn {
-            padding: 0.6rem;
+            padding: 0.75rem;
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             color: var(--text-primary);
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.15s ease;
+        }
+
+        .calc-btn:active {
+            transform: scale(0.95);
         }
 
         .calc-btn:hover {
             border-color: var(--accent-color);
+            background: var(--accent-glow);
+            color: var(--accent-color);
         }
 
         .converter-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            gap: 0.4rem;
+        }
+
+        .converter-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
 
         .converter-group input, .converter-group select {
-            padding: 0.5rem;
+            padding: 0.6rem 0.75rem;
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             color: var(--text-primary);
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            outline: none;
+            font-weight: 500;
         }
 
+        .converter-group input:focus, .converter-group select:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* Footer */
         footer {
             background-color: var(--panel-bg);
             border-top: 1px solid var(--panel-border);
             text-align: center;
-            padding: 0.75rem 1rem;
+            padding: 0.85rem 1rem;
             margin-top: auto;
-            position: relative;
-            z-index: 100;
+            z-index: 90;
         }
 
         footer .disclaimer {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
+            line-height: 1.3;
         }
 
-        @media (max-width: 900px) {
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
             sidebar {
                 width: 100%;
-                top: 73px;
+            }
+            header {
+                padding: 0.75rem 1rem;
+            }
+            main {
+                padding: 1rem;
             }
         }
     </style>
@@ -563,9 +715,9 @@
             </div>
         </div>
         <div class="header-controls">
-            <button class="btn-icon" id="installBtn">📲 Install App</button>
-            <button class="btn-icon" id="sidebarToggle">🧰 Lab Tools</button>
-            <button class="btn-icon" id="themeToggle">🌓 Theme</button>
+            <button class="btn-icon" id="installBtn">📲 Install</button>
+            <button class="btn-icon" id="sidebarToggle" title="Lab Tools">🧰 Tools</button>
+            <button class="btn-icon" id="themeToggle" title="Toggle Theme">🌓</button>
         </div>
     </header>
 
@@ -573,15 +725,15 @@
         <main>
             <section class="search-section">
                 <div class="search-bar-wrapper">
-                    <input type="text" id="searchInput" placeholder="Search any reagent (e.g., Benedict's, Mayer's, Dragendorff's)..." autocomplete="off">
+                    <input type="text" id="searchInput" placeholder="Search reagent (e.g., Benedict's, Mayer's)..." autocomplete="off">
                     <button type="button" id="dropdownToggleBtn" class="dropdown-toggle-btn" title="View all reagents">▼</button>
                     <div id="suggestionsBox" class="suggestions-dropdown"></div>
                 </div>
             </section>
 
             <section id="displayArea">
-                <div id="placeholderCard" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
-                    Select or search for a reagent above to view details and scale preparation volumes.
+                <div id="placeholderCard">
+                    Select or search for any reagent above to view formulation details and scale preparation volumes instantly.
                 </div>
                 
                 <div id="reagentCard" class="reagent-card">
@@ -603,12 +755,12 @@
                             </div>
                         </div>
 
-                        <h4 style="margin-bottom: 0.5rem;">Calculated Ingredients Required:</h4>
+                        <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">Calculated Ingredients Required:</h4>
                         <ul id="rIngredients" class="ingredients-list"></ul>
                     </div>
 
                     <div>
-                        <h3 style="margin-bottom: 0.75rem;">Preparation Procedure:</h3>
+                        <h3 style="margin-bottom: 0.65rem; font-size: 1rem; font-weight: 700;">Preparation Procedure:</h3>
                         <ol id="rProcedure" class="procedure-list"></ol>
                     </div>
 
@@ -620,7 +772,7 @@
                     <!-- Perform Test Section -->
                     <div class="perform-test-wrapper">
                         <button class="perform-test-btn" id="performTestToggle">
-                            <span>🔬 Perform Test Section (Protocol & Inferences)</span>
+                            <span>🔬 Perform Test Protocol & Inferences</span>
                             <span id="testToggleIcon">▼</span>
                         </button>
                         <div class="perform-test-content" id="performTestContent">
@@ -645,13 +797,13 @@
 
         <sidebar id="labSidebar">
             <div class="sidebar-header">
-                <div class="tools-title">Lab Tools</div>
+                <div class="tools-title">Lab Utilities</div>
                 <button class="close-sidebar-btn" id="closeSidebar">✕</button>
             </div>
 
             <!-- Basic Calculator -->
             <div class="tool-card">
-                <h4>Basic Calculator</h4>
+                <h4>Quick Calculator</h4>
                 <input type="text" id="calcDisplay" class="calc-display" readonly>
                 <div class="calc-grid">
                     <button class="calc-btn" onclick="clearCalc()">C</button>
@@ -672,7 +824,7 @@
                     <button class="calc-btn" onclick="appendCalc('1')">1</button>
                     <button class="calc-btn" onclick="appendCalc('2')">2</button>
                     <button class="calc-btn" onclick="appendCalc('3')">3</button>
-                    <button class="calc-btn" onclick="runCalc()" style="grid-row: span 2; height: 100%;">=</button>
+                    <button class="calc-btn" onclick="runCalc()" style="grid-row: span 2; height: 100%; background: var(--accent-color); color: #fff; border-color: var(--accent-color);">=</button>
                     
                     <button class="calc-btn" onclick="appendCalc('0')" style="grid-column: span 2;">0</button>
                     <button class="calc-btn" onclick="appendCalc('.')">.</button>
@@ -683,21 +835,27 @@
             <div class="tool-card">
                 <h4>Unit Converter</h4>
                 <div class="converter-group">
-                    <label style="font-size:0.8rem;">Category</label>
+                    <label>Category</label>
                     <select id="convCategory" onchange="updateConvUnits()">
                         <option value="mass">Mass</option>
                         <option value="volume">Volume</option>
                     </select>
                 </div>
                 <div class="converter-group">
-                    <input type="number" id="convVal" placeholder="Value" value="1" oninput="convertUnits()">
+                    <label>Value</label>
+                    <input type="number" id="convVal" value="1" oninput="convertUnits()">
                 </div>
-                <div class="converter-group">
-                    <select id="convFrom" onchange="convertUnits()"></select>
-                    <span style="text-align: center; font-size: 0.8rem;">to</span>
-                    <select id="convTo" onchange="convertUnits()"></select>
+                <div style="display: flex; gap: 0.5rem;">
+                    <div class="converter-group" style="flex: 1;">
+                        <label>From</label>
+                        <select id="convFrom" onchange="convertUnits()"></select>
+                    </div>
+                    <div class="converter-group" style="flex: 1;">
+                        <label>To</label>
+                        <select id="convTo" onchange="convertUnits()"></select>
+                    </div>
                 </div>
-                <div style="font-weight: 600; font-size: 0.95rem; color: var(--accent-color);" id="convResult">
+                <div style="font-weight: 700; font-size: 0.95rem; color: var(--accent-color); margin-top: 0.25rem;" id="convResult">
                     1 g = 1000 mg
                 </div>
             </div>
@@ -706,7 +864,7 @@
 
     <footer>
         <div class="disclaimer">
-            <b>Disclaimer: For educational lab use only. For advanced analysis, please refer respective standards.</b>
+            <b>Disclaimer: For educational lab use only. Always verify with official pharmacopeial standards.</b>
         </div>
     </footer>
 
