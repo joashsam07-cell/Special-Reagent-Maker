@@ -37,10 +37,10 @@
             --text-primary: #ffffff;
             --text-secondary: #cbd5e1;
             
-            /* Jubilant Neon Palette */
+            /* Cool Neon Palette */
             --neon-blue: #00f0ff;
-            --neon-green: #00ff66;
-            --neon-yellow: #ccff00;
+            --neon-green: #00ffaa;
+            --neon-violet: #b026ff;
             
             --accent-color: var(--neon-blue);
             --accent-hover: #33f3ff;
@@ -102,9 +102,21 @@
             right: 15%;
             width: 500px;
             height: 500px;
-            background: rgba(0, 255, 102, 0.1);
+            background: rgba(0, 255, 170, 0.1);
             border-radius: 50%;
             filter: blur(120px);
+        }
+
+        .ambient-blob-3 {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 550px;
+            height: 550px;
+            background: rgba(176, 38, 255, 0.09);
+            border-radius: 50%;
+            filter: blur(130px);
         }
 
         /* Top Header with Neon Blue Border */
@@ -149,10 +161,10 @@
         }
 
         .status-badge.online {
-            background-color: rgba(0, 255, 102, 0.15);
+            background-color: rgba(0, 255, 170, 0.15);
             color: var(--neon-green);
             border: 1px solid var(--neon-green);
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
         }
 
         .status-badge.offline {
@@ -222,15 +234,15 @@
             gap: 1.5rem;
         }
 
-        /* Tab Navigation Styles with Neon Yellow Borders */
+        /* Tab Navigation Styles with Neon Violet Borders */
         .tabs-container {
             display: flex;
             gap: 0.75rem;
-            border-bottom: 2px solid var(--neon-yellow);
+            border-bottom: 2px solid var(--neon-violet);
             padding-bottom: 0.75rem;
             overflow-x: auto;
             scrollbar-width: none;
-            box-shadow: 0 6px 15px rgba(204, 255, 0, 0.1);
+            box-shadow: 0 6px 15px rgba(176, 38, 255, 0.1);
         }
         .tabs-container::-webkit-scrollbar {
             display: none;
@@ -238,7 +250,7 @@
         
         .tab-btn {
             background: var(--input-bg);
-            border: 2px solid rgba(204, 255, 0, 0.4);
+            border: 2px solid rgba(176, 38, 255, 0.4);
             color: var(--text-secondary);
             padding: 0.8rem 1.35rem;
             border-radius: var(--radius-sm);
@@ -250,17 +262,17 @@
         }
         
         .tab-btn.active {
-            background: rgba(204, 255, 0, 0.15);
-            border-color: var(--neon-yellow);
-            color: var(--neon-yellow);
-            box-shadow: 0 0 20px rgba(204, 255, 0, 0.3);
-            text-shadow: 0 0 8px rgba(204, 255, 0, 0.5);
+            background: rgba(176, 38, 255, 0.15);
+            border-color: var(--neon-violet);
+            color: var(--neon-violet);
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.3);
+            text-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
         }
         
         .tab-btn:hover:not(.active) {
-            border-color: var(--neon-yellow);
+            border-color: var(--neon-violet);
             color: var(--text-primary);
-            background: rgba(204, 255, 0, 0.08);
+            background: rgba(176, 38, 255, 0.08);
         }
 
         .tab-content {
@@ -279,8 +291,8 @@
             padding: 4rem 1.5rem;
             color: var(--text-secondary);
             background: var(--card-bg);
-            border: 2px dashed var(--neon-yellow);
-            box-shadow: 0 0 20px rgba(204, 255, 0, 0.15);
+            border: 2px dashed var(--neon-violet);
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.15);
             border-radius: var(--radius-lg);
             font-size: 1.15rem;
             font-weight: 800;
@@ -487,7 +499,7 @@
         .maker-section {
             background-color: var(--input-bg);
             border: 2px solid var(--neon-green);
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.15);
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.15);
             border-radius: var(--radius-md);
             padding: 1.5rem;
         }
@@ -497,7 +509,7 @@
             font-weight: 900;
             margin-bottom: 1rem;
             color: var(--neon-green);
-            text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+            text-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
         }
 
         .volume-input-group {
@@ -531,12 +543,12 @@
             border-radius: var(--radius-sm);
             color: var(--text-primary);
             outline: none;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .volume-input-group input:focus {
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.4);
         }
 
         .ingredients-list, .procedure-list {
@@ -554,41 +566,41 @@
         }
 
         .storage-box {
-            background-color: rgba(204, 255, 0, 0.08);
-            border: 2px solid var(--neon-yellow);
-            border-left: 6px solid var(--neon-yellow);
+            background-color: rgba(176, 38, 255, 0.08);
+            border: 2px solid var(--neon-violet);
+            border-left: 6px solid var(--neon-violet);
             padding: 1.15rem 1.35rem;
             border-radius: var(--radius-sm);
             font-size: 1rem;
             font-weight: 700;
             line-height: 1.5;
-            box-shadow: 0 0 15px rgba(204, 255, 0, 0.15);
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.15);
         }
 
         .storage-box strong {
-            color: var(--neon-yellow);
+            color: var(--neon-violet);
             display: block;
             margin-bottom: 0.35rem;
             font-size: 0.85rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 8px rgba(204, 255, 0, 0.4);
+            text-shadow: 0 0 8px rgba(176, 38, 255, 0.4);
         }
 
-        /* Perform Test Accordion Styles with Neon Yellow Borders */
+        /* Perform Test Accordion Styles with Neon Violet Borders */
         .perform-test-wrapper {
             background-color: var(--input-bg);
-            border: 2px solid var(--neon-yellow);
-            box-shadow: 0 0 20px rgba(204, 255, 0, 0.15);
+            border: 2px solid var(--neon-violet);
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.15);
             border-radius: var(--radius-md);
             overflow: hidden;
         }
 
         .perform-test-btn {
             width: 100%;
-            background-color: rgba(204, 255, 0, 0.15);
-            color: var(--neon-yellow);
+            background-color: rgba(176, 38, 255, 0.15);
+            color: var(--neon-violet);
             border: none;
             padding: 1.15rem 1.35rem;
             font-size: 1.05rem;
@@ -599,18 +611,18 @@
             justify-content: space-between;
             align-items: center;
             transition: background 0.2s;
-            text-shadow: 0 0 8px rgba(204, 255, 0, 0.4);
+            text-shadow: 0 0 8px rgba(176, 38, 255, 0.4);
         }
 
         .perform-test-btn:hover {
-            background-color: rgba(204, 255, 0, 0.25);
-            box-shadow: inset 0 0 15px rgba(204, 255, 0, 0.2);
+            background-color: rgba(176, 38, 255, 0.25);
+            box-shadow: inset 0 0 15px rgba(176, 38, 255, 0.2);
         }
 
         .perform-test-content {
             display: none;
             padding: 1.35rem;
-            border-top: 2px solid var(--neon-yellow);
+            border-top: 2px solid var(--neon-violet);
             flex-direction: column;
             gap: 1.25rem;
             background-color: var(--panel-bg);
@@ -629,7 +641,7 @@
 
         .test-block h4 {
             font-size: 0.85rem;
-            color: var(--neon-yellow);
+            color: var(--neon-violet);
             text-transform: uppercase;
             letter-spacing: 0.6px;
             font-weight: 900;
@@ -645,7 +657,7 @@
         }
 
         .inference-card {
-            background-color: rgba(0, 255, 102, 0.08);
+            background-color: rgba(0, 255, 170, 0.08);
             border: 2px solid var(--neon-green);
             border-left: 6px solid var(--neon-green);
             padding: 1.15rem 1.35rem;
@@ -653,7 +665,7 @@
             font-size: 1rem;
             font-weight: 700;
             line-height: 1.5;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.15);
         }
 
         .inference-card strong {
@@ -664,7 +676,7 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+            text-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
         }
 
         /* Sidebar Drawer with Neon Green Border & Glassmorphism */
@@ -672,7 +684,7 @@
             width: var(--sidebar-width);
             background-color: var(--panel-bg);
             border-left: 2px solid var(--neon-green);
-            box-shadow: -10px 0 40px rgba(0, 255, 102, 0.2);
+            box-shadow: -10px 0 40px rgba(0, 255, 170, 0.2);
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
@@ -705,7 +717,7 @@
             font-size: 1.25rem;
             font-weight: 900;
             color: var(--neon-green);
-            text-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
         }
 
         .close-sidebar-btn {
@@ -722,18 +734,18 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
         }
 
         .close-sidebar-btn:hover {
-            background: rgba(0, 255, 102, 0.2);
+            background: rgba(0, 255, 170, 0.2);
             box-shadow: 0 0 20px var(--neon-green);
         }
 
         .tool-card {
             background-color: var(--input-bg);
-            border: 2px solid var(--neon-yellow);
-            box-shadow: 0 0 15px rgba(204, 255, 0, 0.15);
+            border: 2px solid var(--neon-violet);
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.15);
             border-radius: var(--radius-md);
             padding: 1.25rem;
             display: flex;
@@ -744,15 +756,15 @@
         .tool-card h4 {
             font-size: 1.05rem;
             font-weight: 900;
-            color: var(--neon-yellow);
-            text-shadow: 0 0 8px rgba(204, 255, 0, 0.4);
+            color: var(--neon-violet);
+            text-shadow: 0 0 8px rgba(176, 38, 255, 0.4);
         }
 
         .calc-display {
             width: 100%;
             height: 56px;
             background: var(--panel-bg);
-            border: 2px solid var(--neon-yellow);
+            border: 2px solid var(--neon-violet);
             border-radius: var(--radius-sm);
             color: var(--text-primary);
             text-align: right;
@@ -772,7 +784,7 @@
         .calc-btn {
             padding: 0.85rem;
             background: var(--panel-bg);
-            border: 2px solid rgba(204, 255, 0, 0.4);
+            border: 2px solid rgba(176, 38, 255, 0.4);
             color: var(--text-primary);
             border-radius: var(--radius-sm);
             cursor: pointer;
@@ -786,10 +798,10 @@
         }
 
         .calc-btn:hover {
-            border-color: var(--neon-yellow);
-            background: rgba(204, 255, 0, 0.2);
-            color: var(--neon-yellow);
-            box-shadow: 0 0 10px var(--neon-yellow);
+            border-color: var(--neon-violet);
+            background: rgba(176, 38, 255, 0.2);
+            color: var(--neon-violet);
+            box-shadow: 0 0 10px var(--neon-violet);
         }
 
         .converter-group {
@@ -807,17 +819,17 @@
         .converter-group input, .converter-group select {
             padding: 0.75rem 0.95rem;
             background: var(--panel-bg);
-            border: 2px solid var(--neon-yellow);
+            border: 2px solid var(--neon-violet);
             color: var(--text-primary);
             border-radius: var(--radius-sm);
             font-size: 0.95rem;
             font-weight: 800;
             outline: none;
-            box-shadow: 0 0 10px rgba(204, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(176, 38, 255, 0.1);
         }
 
         .converter-group input:focus, .converter-group select:focus {
-            box-shadow: 0 0 15px rgba(204, 255, 0, 0.3);
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.3);
         }
 
         /* Footer with Neon Blue Border */
@@ -861,6 +873,7 @@
     <div class="ambient-glow">
         <div class="ambient-blob-1"></div>
         <div class="ambient-blob-2"></div>
+        <div class="ambient-blob-3"></div>
     </div>
 
     <header>
@@ -1007,7 +1020,7 @@
                     <button class="calc-btn" onclick="appendCalc('1')">1</button>
                     <button class="calc-btn" onclick="appendCalc('2')">2</button>
                     <button class="calc-btn" onclick="appendCalc('3')">3</button>
-                    <button class="calc-btn" onclick="runCalc()" style="grid-row: span 2; height: 100%; background: var(--neon-yellow); color: #03050a; border-color: var(--neon-yellow);">=</button>
+                    <button class="calc-btn" onclick="runCalc()" style="grid-row: span 2; height: 100%; background: var(--neon-violet); color: #03050a; border-color: var(--neon-violet);">=</button>
                     
                     <button class="calc-btn" onclick="appendCalc('0')" style="grid-column: span 2;">0</button>
                     <button class="calc-btn" onclick="appendCalc('.')">.</button>
@@ -1038,7 +1051,7 @@
                         <select id="convTo" onchange="convertUnits()"></select>
                     </div>
                 </div>
-                <div style="font-weight: 900; font-size: 1.05rem; color: var(--neon-yellow); margin-top: 0.25rem; text-shadow: 0 0 8px rgba(204, 255, 0, 0.4);" id="convResult">
+                <div style="font-weight: 900; font-size: 1.05rem; color: var(--neon-violet); margin-top: 0.25rem; text-shadow: 0 0 8px rgba(176, 38, 255, 0.4);" id="convResult">
                     1 g = 1000 mg
                 </div>
             </div>
