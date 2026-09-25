@@ -183,7 +183,7 @@
 
         .search-bar-wrapper input {
             width: 100%;
-            padding: 1rem 1.25rem;
+            padding: 1rem 3rem 1rem 1.25rem;
             font-size: 1.1rem;
             background-color: var(--input-bg);
             border: 2px solid var(--panel-border);
@@ -194,6 +194,26 @@
 
         .search-bar-wrapper input:focus {
             border-color: var(--accent-color);
+        }
+
+        .dropdown-toggle-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropdown-toggle-btn:hover {
+            color: var(--accent-color);
         }
 
         /* Attached Dropdown Suggestions Box */
@@ -214,6 +234,16 @@
 
         .suggestions-dropdown.active {
             display: block;
+        }
+
+        .suggestion-header {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            background-color: var(--input-bg);
+            border-bottom: 1px solid var(--panel-border);
+            cursor: default;
         }
 
         .suggestion-item {
@@ -544,6 +574,7 @@
             <section class="search-section">
                 <div class="search-bar-wrapper">
                     <input type="text" id="searchInput" placeholder="Search any reagent (e.g., Benedict's, Mayer's, Dragendorff's)..." autocomplete="off">
+                    <button type="button" id="dropdownToggleBtn" class="dropdown-toggle-btn" title="View all reagents">▼</button>
                     <div id="suggestionsBox" class="suggestions-dropdown"></div>
                 </div>
             </section>
@@ -722,7 +753,7 @@
                 isFetching = false;
                 // If user typed something while fetch was running, refresh suggestions immediately
                 const currentQuery = searchInput.value;
-                if (currentQuery) {
+                if (currentQuery && suggestionsBox.dataset.mode !== 'full') {
                     updateSuggestions(currentQuery);
                 }
             }
@@ -749,8 +780,10 @@
         // Custom Attached Dropdown Suggestions Handler
         const searchInput = document.getElementById('searchInput');
         const suggestionsBox = document.getElementById('suggestionsBox');
+        const dropdownToggleBtn = document.getElementById('dropdownToggleBtn');
 
         function updateSuggestions(query) {
+            suggestionsBox.removeAttribute('data-mode');
             const val = query.toLowerCase().trim();
             suggestionsBox.innerHTML = '';
 
@@ -788,6 +821,7 @@
                     searchInput.value = reagent.name;
                     renderReagent(reagent);
                     suggestionsBox.classList.remove('active');
+                    suggestionsBox.removeAttribute('data-mode');
                 });
 
                 suggestionsBox.appendChild(item);
@@ -796,12 +830,66 @@
             suggestionsBox.classList.add('active');
         }
 
+        // Toggle full alphabetized list when dropdown arrow is clicked
+        function toggleFullList() {
+            if (suggestionsBox.classList.contains('active') && suggestionsBox.dataset.mode === 'full') {
+                suggestionsBox.classList.remove('active');
+                suggestionsBox.removeAttribute('data-mode');
+                return;
+            }
+
+            suggestionsBox.innerHTML = '';
+
+            if (!reagentsData || reagentsData.length === 0) {
+                const loadingItem = document.createElement('div');
+                loadingItem.className = 'suggestion-item';
+                loadingItem.style.color = 'var(--text-secondary)';
+                loadingItem.innerText = isFetching ? 'Loading database...' : 'No reagents available.';
+                suggestionsBox.appendChild(loadingItem);
+                suggestionsBox.classList.add('active');
+                suggestionsBox.dataset.mode = 'full';
+                return;
+            }
+
+            // Header showing total count and alphabetical sorting note
+            const headerItem = document.createElement('div');
+            headerItem.className = 'suggestion-header';
+            headerItem.innerText = `Total Reagents: ${reagentsData.length} (Alphabetical Order)`;
+            suggestionsBox.appendChild(headerItem);
+
+            // Sort alphabetically by name
+            const sortedReagents = [...reagentsData].sort((a, b) => a.name.localeCompare(b.name));
+
+            sortedReagents.forEach(reagent => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerText = reagent.name;
+                
+                item.addEventListener('click', () => {
+                    searchInput.value = reagent.name;
+                    renderReagent(reagent);
+                    suggestionsBox.classList.remove('active');
+                    suggestionsBox.removeAttribute('data-mode');
+                });
+
+                suggestionsBox.appendChild(item);
+            });
+
+            suggestionsBox.classList.add('active');
+            suggestionsBox.dataset.mode = 'full';
+        }
+
+        dropdownToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleFullList();
+        });
+
         searchInput.addEventListener('input', (e) => {
             updateSuggestions(e.target.value);
         });
 
         searchInput.addEventListener('focus', (e) => {
-            if (e.target.value) {
+            if (e.target.value && suggestionsBox.dataset.mode !== 'full') {
                 updateSuggestions(e.target.value);
             }
         });
@@ -809,6 +897,7 @@
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-bar-wrapper')) {
                 suggestionsBox.classList.remove('active');
+                suggestionsBox.removeAttribute('data-mode');
             }
         });
 
